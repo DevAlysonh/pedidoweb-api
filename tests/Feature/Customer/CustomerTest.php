@@ -54,7 +54,7 @@ class CustomerTest extends TestCase
         ]);
 
         $this->assertDatabaseHas('addresses', [
-            'zipcode' => '01001-000',
+            'zipcode' => '01001000',
             'city' => 'São Paulo'
         ]);
     }

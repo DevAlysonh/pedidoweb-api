@@ -16,6 +16,8 @@ final class CreateCustomerDTO
 
     public static function fromRequest(array $data): self
     {
+        $zipcode = preg_replace('/\D/', '', $data['zipcode']);
+
         return new self(
             name: $data['name'],
             email: $data['email'],
@@ -23,7 +25,7 @@ final class CreateCustomerDTO
             number: $data['number'],
             city: $data['city'],
             state: $data['state'],
-            zipcode: $data['zipcode'],
+            zipcode: $zipcode,
         );
     }
 }

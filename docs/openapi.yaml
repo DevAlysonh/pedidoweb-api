@@ -135,32 +135,35 @@ paths:
               schema:
                 type: object
                 properties:
-                  message:
-                    type: string
-                    example: "Cliente criado com sucesso"
-                  customer:
+                  data:
                     type: object
                     properties:
-                      id:
+                      mensagem:
                         type: string
-                        example: "cus_abc123xyz789"
-                      name:
-                        type: string
-                      email:
-                        type: string
-                      address:
+                        example: "Cliente criado com sucesso"
+                      customer:
                         type: object
                         properties:
-                          street:
+                          id:
                             type: string
-                          number:
+                            example: "cus_abc123xyz789"
+                          name:
                             type: string
-                          city:
+                          email:
                             type: string
-                          state:
-                            type: string
-                          zipcode:
-                            type: string
+                          address:
+                            type: object
+                            properties:
+                              street:
+                                type: string
+                              number:
+                                type: string
+                              city:
+                                type: string
+                              state:
+                                type: string
+                              zipcode:
+                                type: string
         '422':
           description: Erro de validação ou CEP inválido
           content:
