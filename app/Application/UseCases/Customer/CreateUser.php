@@ -2,7 +2,6 @@
 
 namespace App\Application\UseCases\Customer;
 
-use App\Application\Dto\CepData;
 use App\Application\Dto\Customer\CreateCustomer;
 use App\Domain\Customer\Entities\Customer;
 use App\Domain\Customer\Exceptions\InvalidZipcodeException;
