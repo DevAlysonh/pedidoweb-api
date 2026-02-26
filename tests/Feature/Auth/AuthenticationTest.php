@@ -105,4 +105,35 @@ class AuthenticationTest extends TestCase
                 'email' => 'foo@email.com'
             ]);
     }
+
+    public function test_authenticated_user_can_logout(): void
+    {
+        $this->postJson('/api/v1/auth/register', [
+            'name' => 'Foo Bar',
+            'email' => 'foo@email.com',
+            'password' => '123456',
+        ]);
+
+        $loginResponse = $this->postJson('/api/v1/auth/login', [
+            'email' => 'foo@email.com',
+            'password' => '123456',
+        ]);
+
+        $token = $loginResponse->json('access_token');
+
+        $response = $this->withHeader('Authorization', "Bearer {$token}")
+            ->postJson('/api/v1/auth/logout');
+
+        $response
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJson([
+                'message' => 'Successfully logged out'
+            ]);
+    }
+
+    public function test_guest_cannot_logout(): void
+    {
+        $this->postJson('/api/v1/auth/logout')
+            ->assertStatus(Response::HTTP_UNAUTHORIZED);
+    }
 }
