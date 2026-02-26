@@ -176,8 +176,8 @@ paths:
                     errors:
                       type: object
                       example:
-                        email: ["The email has already been taken."]
-                        zipcode: ["The zipcode format is invalid."]
+                        email: [ "The email has already been taken." ]
+                        zipcode: [ "The zipcode format is invalid." ]
                 - type: object
                   description: Erro de CEP inválido ou não corresponde ao endereço
                   properties:
