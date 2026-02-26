@@ -8,6 +8,6 @@ class InvalidZipcodeException extends \DomainException
 {
     public function __construct(string $zipcode)
     {
-        parent::__construct("CEP inválido ou não encontrado: {$zipcode}", 422);
+        parent::__construct("CEP inválido ou incorreto para este endereço: {$zipcode}", 422);
     }
 }

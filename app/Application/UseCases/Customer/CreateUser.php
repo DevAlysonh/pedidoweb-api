@@ -2,6 +2,7 @@
 
 namespace App\Application\UseCases\Customer;
 
+use App\Application\Dto\CepData;
 use App\Application\Dto\Customer\CreateCustomer;
 use App\Domain\Customer\Entities\Customer;
 use App\Domain\Customer\Exceptions\InvalidZipcodeException;
@@ -20,11 +21,7 @@ class CreateUser
 
     public function execute(CreateCustomer $dto): Customer
     {
-        // $cepData = $this->cepService->lookup($dto->zipcode);
-        
-        // if ($cepData === null) {
-        //     throw new InvalidZipcodeException($dto->zipcode);
-        // }
+        $this->validateAddress($dto);
 
         $customerId = $this->idGenerator->generate(Customer::PREFIX);
         $addressId  = $this->idGenerator->generate(Address::PREFIX);
@@ -48,5 +45,21 @@ class CreateUser
         $this->repository->save($customer);
 
         return $customer;
+    }
+
+    private function validateAddress(CreateCustomer $dto): void
+    {
+        $cepData = $this->cepService->lookup($dto->zipcode);
+
+        if ($cepData === null) {
+            throw new InvalidZipcodeException($dto->zipcode);
+        }
+
+        if (
+            strtolower($cepData->city) !== strtolower($dto->city) ||
+            strtoupper($cepData->state) !== strtoupper($dto->state)
+        ) {
+            throw new InvalidZipcodeException($dto->zipcode);
+        }
     }
 }

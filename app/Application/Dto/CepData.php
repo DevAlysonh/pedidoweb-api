@@ -8,6 +8,7 @@ final class CepData
 {
     public function __construct(
         public readonly string $zipcode,
+        public readonly string $number,
         public readonly string $street,
         public readonly string $city,
         public readonly string $state,

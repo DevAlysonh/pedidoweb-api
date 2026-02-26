@@ -45,11 +45,6 @@ class CustomerController extends Controller
                 'message' => $e->getMessage(),
                 'error' => 'invalid_zipcode',
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
-        } catch (\InvalidArgumentException $e) {
-            return response()->json([
-                'message' => $e->getMessage(),
-                'error' => 'invalid_input',
-            ], Response::HTTP_BAD_REQUEST);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Erro ao consultar CEP. Tente novamente mais tarde.',
