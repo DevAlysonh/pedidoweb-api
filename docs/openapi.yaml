@@ -82,6 +82,117 @@ paths:
         '401':
           description: Não autenticado
 
+  /customers:
+    post:
+      summary: Criar novo cliente
+      tags:
+      - Customer
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [ name, email, street, number, city, state, zipcode ]
+              properties:
+                name:
+                  type: string
+                  maxLength: 255
+                  example: "João Silva"
+                email:
+                  type: string
+                  format: email
+                  example: "joao@example.com"
+                street:
+                  type: string
+                  maxLength: 255
+                  example: "Rua Principal"
+                number:
+                  type: string
+                  maxLength: 10
+                  example: "123"
+                city:
+                  type: string
+                  maxLength: 255
+                  example: "São Paulo"
+                state:
+                  type: string
+                  minLength: 2
+                  maxLength: 2
+                  example: "SP"
+                zipcode:
+                  type: string
+                  pattern: '^\d{5}-?\d{3}$'
+                  maxLength: 9
+                  example: "01310-100"
+      responses:
+        '201':
+          description: Cliente criado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      mensagem:
+                        type: string
+                        example: "Cliente criado com sucesso"
+                      customer:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: "cus_abc123xyz789"
+                          name:
+                            type: string
+                          email:
+                            type: string
+                          address:
+                            type: object
+                            properties:
+                              street:
+                                type: string
+                              number:
+                                type: string
+                              city:
+                                type: string
+                              state:
+                                type: string
+                              zipcode:
+                                type: string
+        '422':
+          description: Erro de validação ou CEP inválido
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - type: object
+                  description: Erro de validação do formulário
+                  properties:
+                    message:
+                      type: string
+                      example: "The given data was invalid."
+                    errors:
+                      type: object
+                      example:
+                        email: [ "The email has already been taken." ]
+                        zipcode: [ "The zipcode format is invalid." ]
+                - type: object
+                  description: Erro de CEP inválido ou não corresponde ao endereço
+                  properties:
+                    message:
+                      type: string
+                      example: "CEP inválido ou incorreto para este endereço: 01310-100"
+                    error:
+                      type: string
+                      example: "invalid_zipcode"
+        '401':
+          description: Não autenticado (token inválido ou ausente)
+
 components:
   securitySchemes:
     bearerAuth:
