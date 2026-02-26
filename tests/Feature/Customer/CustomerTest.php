@@ -7,7 +7,6 @@ use App\Domain\Customer\Exceptions\InvalidZipcodeException;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Response;
-use Psy\Util\Str;
 use Tests\TestCase;
 
 class CustomerTest extends TestCase
@@ -62,6 +61,8 @@ class CustomerTest extends TestCase
 
     public function test_customer_cannot_be_created_with_invalid_address(): void
     {
+        $this->withExceptionHandling();
+
         $fakeCepService = $this->fakeCepService(
             zipcode: '58052197',
             number: '123',

@@ -13,4 +13,17 @@ final class CreateCustomer
         public readonly string $state,
         public readonly string $zipcode,
     ) {}
+
+    public static function fromRequest(array $data): self
+    {
+        return new self(
+            name: $data['name'],
+            email: $data['email'],
+            street: $data['street'],
+            number: $data['number'],
+            city: $data['city'] ?? '',
+            state: $data['state'] ?? '',
+            zipcode: $data['zipcode'],
+        );
+    }
 }
