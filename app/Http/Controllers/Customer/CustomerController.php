@@ -6,24 +6,16 @@ use App\Application\Dto\Customer\CreateCustomer;
 use App\Application\UseCases\Customer\CreateUser;
 use App\Domain\Customer\Exceptions\InvalidZipcodeException;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Customer\CreateCustomerRequest;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class CustomerController extends Controller
 {
-    public function store(Request $request, CreateUser $createUserUseCase): JsonResponse
+    public function store(CreateCustomerRequest $request, CreateUser $createUserUseCase): JsonResponse
     {
         try {
-            $validated = $request->validate([
-                'name' => 'required|string|max:255',
-                'email' => 'required|email|max:255|unique:customers',
-                'street' => 'required|string|max:255',
-                'city' => 'required|string|max:255',
-                'state' => 'required|string|max:255',
-                'number' => 'required|string|max:20',
-                'zipcode' => 'required|regex:/^\d{5}-?\d{3}$/',
-            ]);
+            $validated = $request->validated();
 
             $createCustomerDto = new CreateCustomer(
                 name: $validated['name'],
