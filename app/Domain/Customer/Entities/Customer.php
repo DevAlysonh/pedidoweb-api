@@ -6,6 +6,8 @@ use App\Domain\Customer\VO\Address;
 
 final class Customer
 {
+    public const PREFIX = 'cus_';
+
     public function __construct(
         private string $id,
         private string $name,

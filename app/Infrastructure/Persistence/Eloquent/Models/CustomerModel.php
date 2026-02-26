@@ -8,6 +8,7 @@ class CustomerModel extends Model
 {
     public $incrementing = false;
     protected $keyType = 'string';
+    protected $table = 'customers';
 
     protected $fillable = [
         'id',
