@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Application\Dto\Customer\CreateCustomerDTO;
-use App\Application\UseCases\Customer\CreateCustomer as CreateCustomerUseCase;
+use App\Application\UseCases\Customer\CreateCustomerUseCase;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Customer\CreateCustomerRequest;
 use Illuminate\Http\JsonResponse;

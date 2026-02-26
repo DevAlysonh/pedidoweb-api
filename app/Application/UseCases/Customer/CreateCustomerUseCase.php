@@ -10,7 +10,7 @@ use App\Domain\Customer\VO\Address;
 use App\Domain\Shared\Interfaces\IdGenerator;
 use App\Infrastructure\Services\CepService;
 
-class CreateCustomer
+class CreateCustomerUseCase
 {
     public function __construct(
         private CustomerRepositoryInterface $repository,
