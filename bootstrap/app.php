@@ -1,6 +1,7 @@
 <?php
 
 use App\Domain\Customer\Exceptions\InvalidZipcodeException;
+use App\Infrastructure\Shared\LaravelLogger;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -18,6 +19,11 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (InvalidZipcodeException $e, $request) {
+            new LaravelLogger()->error('CEP inválido durante criação de cliente', [
+                'error' => $e->getMessage(),
+                'exception' => get_class($e),
+            ]);
+
             return response()->json([
                 'message' => $e->getMessage(),
                 'error' => 'invalid_zipcode',

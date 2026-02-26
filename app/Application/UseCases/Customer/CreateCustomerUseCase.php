@@ -8,6 +8,7 @@ use App\Domain\Customer\Exceptions\InvalidZipcodeException;
 use App\Domain\Customer\Repositories\CustomerRepositoryInterface;
 use App\Domain\Customer\VO\Address;
 use App\Domain\Shared\Interfaces\IdGenerator;
+use App\Domain\Shared\Interfaces\LoggerInterface;
 use App\Infrastructure\Services\CepService;
 
 class CreateCustomerUseCase
@@ -15,7 +16,8 @@ class CreateCustomerUseCase
     public function __construct(
         private CustomerRepositoryInterface $repository,
         private IdGenerator $idGenerator,
-        private CepService $cepService
+        private CepService $cepService,
+        private LoggerInterface $logger
     ) {}
 
     public function execute(CreateCustomerDTO $dto): Customer
@@ -42,6 +44,11 @@ class CreateCustomerUseCase
         );
 
         $this->repository->save($customer);
+
+        $this->logger->info('Novo cliente cadastrado', [
+            'customer_id' => $customerId,
+            'email' => $dto->email,
+        ]);
 
         return $customer;
     }
