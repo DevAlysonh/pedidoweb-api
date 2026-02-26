@@ -1,0 +1,74 @@
+openapi: 3.0.3
+info:
+  title: PedidoWeb API
+  version: 1.0.0
+  description: API de gerenciamento de pedidos com autenticação JWT.
+
+servers:
+- url: http://localhost:8001/api/v1
+
+paths:
+  /auth/register:
+    post:
+      summary: Registrar novo usuário
+      tags:
+      - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [ name, email, password ]
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Token JWT retornado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  token_type:
+                    type: string
+                  expires_in:
+                    type: integer
+
+  /auth/login:
+    post:
+      summary: Login do usuário
+      tags:
+      - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [ email, password ]
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Token JWT retornado
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+- bearerAuth: []
