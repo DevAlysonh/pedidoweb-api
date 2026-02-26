@@ -89,8 +89,10 @@ class CustomerTest extends TestCase
             $payload
         );
 
-        dd($response->getContent());
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonFragment([
+                'message' => 'CEP inválido ou incorreto para este endereço: 58052197'
+            ]);
     }
 
     private function createAuthenticatedUser()
