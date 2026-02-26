@@ -2,7 +2,7 @@
 
 namespace App\Application\UseCases\Customer;
 
-use App\Application\Dto\Customer\CreateCustomer;
+use App\Application\Dto\Customer\CreateCustomerDTO;
 use App\Domain\Customer\Entities\Customer;
 use App\Domain\Customer\Exceptions\InvalidZipcodeException;
 use App\Domain\Customer\Repositories\CustomerRepositoryInterface;
@@ -10,7 +10,7 @@ use App\Domain\Customer\VO\Address;
 use App\Domain\Shared\Interfaces\IdGenerator;
 use App\Infrastructure\Services\CepService;
 
-class CreateUser
+class CreateCustomer
 {
     public function __construct(
         private CustomerRepositoryInterface $repository,
@@ -18,7 +18,7 @@ class CreateUser
         private CepService $cepService
     ) {}
 
-    public function execute(CreateCustomer $dto): Customer
+    public function execute(CreateCustomerDTO $dto): Customer
     {
         $this->validateAddress($dto);
 
@@ -46,7 +46,7 @@ class CreateUser
         return $customer;
     }
 
-    private function validateAddress(CreateCustomer $dto): void
+    private function validateAddress(CreateCustomerDTO $dto): void
     {
         $cepData = $this->cepService->lookup($dto->zipcode);
 

@@ -2,7 +2,7 @@
 
 namespace App\Application\Dto\Customer;
 
-final class CreateCustomer
+final class CreateCustomerDTO
 {
     public function __construct(
         public readonly string $name,
