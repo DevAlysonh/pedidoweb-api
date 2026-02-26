@@ -2,10 +2,10 @@
 
 namespace App\Infrastructure\Shared;
 
-use App\Domain\Shared\Interfaces\IdGenerator;
+use App\Domain\Shared\Interfaces\IdGeneratorInterface;
 use Illuminate\Support\Str;
 
-class UuidGenerator implements IdGenerator
+class UuidGenerator implements IdGeneratorInterface
 {
     public function generate(string $prefix = ''): string
     {

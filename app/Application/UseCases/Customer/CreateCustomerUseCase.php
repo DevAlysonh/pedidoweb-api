@@ -7,7 +7,7 @@ use App\Domain\Customer\Entities\Customer;
 use App\Domain\Customer\Exceptions\InvalidZipcodeException;
 use App\Domain\Customer\Repositories\CustomerRepositoryInterface;
 use App\Domain\Customer\VO\Address;
-use App\Domain\Shared\Interfaces\IdGenerator;
+use App\Domain\Shared\Interfaces\IdGeneratorInterface;
 use App\Domain\Shared\Interfaces\LoggerInterface;
 use App\Infrastructure\Services\CepService;
 
@@ -15,7 +15,7 @@ class CreateCustomerUseCase
 {
     public function __construct(
         private CustomerRepositoryInterface $repository,
-        private IdGenerator $idGenerator,
+        private IdGeneratorInterface $idGenerator,
         private CepService $cepService,
         private LoggerInterface $logger
     ) {}

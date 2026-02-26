@@ -2,7 +2,7 @@
 
 namespace App\Domain\Shared\Interfaces;
 
-interface IdGenerator
+interface IdGeneratorInterface
 {
     public function generate(string $prefix): string;
 }
