@@ -21,8 +21,8 @@ final class CreateCustomerDTO
             email: $data['email'],
             street: $data['street'],
             number: $data['number'],
-            city: $data['city'] ?? '',
-            state: $data['state'] ?? '',
+            city: $data['city'],
+            state: $data['state'],
             zipcode: $data['zipcode'],
         );
     }
