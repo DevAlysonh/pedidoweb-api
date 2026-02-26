@@ -17,9 +17,22 @@ class CustomerController extends Controller
     ): JsonResponse {
         $createCustomerDto = CreateCustomerDTO::fromRequest($request->validated());
 
-        $createCustomerUseCase->execute($createCustomerDto);
+        $createdCustomer = $createCustomerUseCase->execute($createCustomerDto);
+
         return response()->json([
             'message' => 'Cliente criado com sucesso',
+            'customer' => [
+                'id' => $createdCustomer->id(),
+                'name' => $createdCustomer->name(),
+                'email' => $createdCustomer->email(),
+                'address' => [
+                    'street' => $createdCustomer->address()->street(),
+                    'number' => $createdCustomer->address()->number(),
+                    'city' => $createdCustomer->address()->city(),
+                    'state' => $createdCustomer->address()->state(),
+                    'zipcode' => $createdCustomer->address()->zipcode(),
+                ],
+            ],
         ], Response::HTTP_CREATED);
     }
 }
