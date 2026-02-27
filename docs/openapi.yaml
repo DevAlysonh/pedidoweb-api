@@ -1,8 +1,8 @@
 openapi: 3.0.3
 info:
-  title: PedidoWeb API
+  title: Customer Manage API
   version: 1.0.0
-  description: API de gerenciamento de pedidos com autenticação JWT.
+  description: API de gerenciamento de clientes com autenticação JWT.
 
 servers:
 - url: http://localhost:8000/api/v1
@@ -166,6 +166,51 @@ paths:
                     example: "Successfully logged out"
               example:
                 message: "Successfully logged out"
+        '401':
+          description: Não autenticado (token inválido ou ausente)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Unauthenticated"
+              example:
+                message: "Unauthenticated"
+
+  /auth/me:
+    get:
+      summary: Obter dados do usuário autenticado
+      tags: [ Auth ]
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Dados do usuário autenticado retornados com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: "usr_abc123xyz789"
+                      name:
+                        type: string
+                        example: "João Silva"
+                      email:
+                        type: string
+                        format: email
+                        example: "joao@example.com"
+              example:
+                data:
+                  id: "usr_abc123xyz789"
+                  name: "João Silva"
+                  email: "joao@example.com"
         '401':
           description: Não autenticado (token inválido ou ausente)
           content:
