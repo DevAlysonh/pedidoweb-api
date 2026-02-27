@@ -2,60 +2,71 @@
 
 namespace App\Http\Controllers;
 
-use App\Infrastructure\Persistence\Eloquent\Models\User;
+use App\Application\Dto\User\LoginUserDTO;
+use App\Application\Dto\User\RegisterUserDTO;
+use App\Application\UseCases\User\LoginUseCase;
+use App\Application\UseCases\User\MeUseCase;
+use App\Application\UseCases\User\RegisterUseCase;
+use App\Domain\User\VO\UserId;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\RegisterRequest;
+use App\Http\Resources\Auth\AuthTokenResource;
+use App\Http\Resources\Auth\UserResource;
+use App\Infrastructure\Persistence\Eloquent\Models\User as UserModel;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Response;
 
 class AuthController extends Controller
 {
-    public function register(Request $request): JsonResponse
-    {
-        $validated = $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
-        ]);
+    public function register(
+        RegisterRequest $request,
+        RegisterUseCase $registerUseCase
+    ): JsonResponse {
+        $registerUserDTO = RegisterUserDTO::fromRequest($request->validated());
 
-        $validated['password'] = Hash::make($validated['password']);
+        $registerUseCase->execute($registerUserDTO);
 
-        $user = User::create($validated);
+        $eloquentUser = UserModel::where(
+            'email',
+            $request->input('email')
+        )->firstOrFail();
+        
+        $token = auth('api')->fromUser($eloquentUser);
 
-        $token = Auth::login($user);
-
-        return $this->respondWithToken($token);
+        return (new AuthTokenResource($token))
+            ->response()
+            ->setStatusCode(Response::HTTP_CREATED);
     }
 
-    public function login(Request $request): JsonResponse
-    {
-        if (!$token = Auth::attempt($request->only('email', 'password'))) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
+    public function login(
+        LoginRequest $request,
+        LoginUseCase $loginUseCase
+    ): JsonResponse {
+        $loginUserDTO = LoginUserDTO::fromRequest($request->validated());
 
-        return $this->respondWithToken($token);
+        $token = $loginUseCase->execute($loginUserDTO);
+
+        return (new AuthTokenResource($token))
+            ->response()
+            ->setStatusCode(Response::HTTP_OK);
     }
 
-    public function me(): JsonResponse
+    public function me(MeUseCase $meUseCase): JsonResponse
     {
-        return response()->json(Auth::user());
+        $userId = UserId::fromString(auth()->id());
+        $user = $meUseCase->execute($userId);
+
+        return (new UserResource($user))
+            ->response()
+            ->setStatusCode(Response::HTTP_OK);
     }
 
     public function logout(): JsonResponse
     {
-        auth()->logout();
+        auth('api')->logout();
 
         return response()->json([
             'message' => 'Successfully logged out'
-        ]);
-    }
-
-    protected function respondWithToken($token): JsonResponse
-    {
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => Auth::factory()->getTTL() * 60
-        ]);
+        ], Response::HTTP_OK);
     }
 }
