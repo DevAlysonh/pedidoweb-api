@@ -19,9 +19,10 @@ class CustomerController extends Controller
     ): JsonResponse {
         $customers = $listCustomersUseCase->execute(auth()->user()->id);
 
-        return $customers
-            ? response()->json(CustomerResource::collection($customers), Response::HTTP_OK)
-            : response()->json([], Response::HTTP_NO_CONTENT);
+        return response()->json(
+            CustomerResource::collection($customers),
+            Response::HTTP_OK
+        );
     }
 
     public function store(
@@ -44,17 +45,10 @@ class CustomerController extends Controller
         string $customerId,
         ShowCustomerUseCase $showCustomerUseCase
     ): JsonResponse {
-        $customer = $showCustomerUseCase->execute($customerId, auth()->user()->id);
+        $customer = $showCustomerUseCase->execute($customerId, auth()->id());
 
-        if (!$customer) {
-            return response()->json(
-                ['message' => 'Cliente não encontrado'],
-                Response::HTTP_NOT_FOUND
-            );
-        }
-
-        return response()->json([
-            'customer' => new CustomerResource($customer)
-        ]);
+        return new CustomerResource($customer)
+            ->response()
+            ->setStatusCode(Response::HTTP_OK);
     }
 }

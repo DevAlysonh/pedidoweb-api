@@ -1,5 +1,6 @@
 <?php
 
+use App\Domain\Customer\Exceptions\CustomerNotFoundException;
 use App\Domain\Customer\Exceptions\InvalidZipcodeException;
 use App\Domain\Customer\Exceptions\UnauthorizedException;
 use App\Domain\Shared\Interfaces\LoggerInterface;
@@ -7,7 +8,6 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -32,7 +32,7 @@ return Application::configure(basePath: dirname(__DIR__))
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         });
 
-        $exceptions->render(function (NotFoundHttpException $e, $request) {
+        $exceptions->render(function (CustomerNotFoundException $e, $request) {
             app(LoggerInterface::class)->error('Recurso não encontrado', [
                 'error' => $e->getMessage(),
                 'exception' => get_class($e),

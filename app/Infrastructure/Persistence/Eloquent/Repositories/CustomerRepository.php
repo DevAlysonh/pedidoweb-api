@@ -62,7 +62,7 @@ class CustomerRepository implements CustomerRepositoryInterface
     public function findById(string $customerId): ?Customer
     {
         $customerModel = CustomerModel::with('address')
-            ->findOrFail($customerId);
+            ->find($customerId);
 
         return $this->toDomain($customerModel);
     }
