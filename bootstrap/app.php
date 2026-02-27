@@ -3,7 +3,6 @@
 use App\Domain\Customer\Exceptions\InvalidZipcodeException;
 use App\Domain\Customer\Exceptions\UnauthorizedException;
 use App\Domain\Shared\Interfaces\LoggerInterface;
-use App\Infrastructure\Shared\LaravelLogger;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
