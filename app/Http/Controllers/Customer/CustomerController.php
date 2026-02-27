@@ -18,14 +18,11 @@ class CustomerController extends Controller
     public function index(
         ListCustomersUseCase $listCustomersUseCase
     ): JsonResponse {
-        return response()->json([
-            'message' => auth()->user()->id
-        ]);
         $customers = $listCustomersUseCase->execute(auth()->user()->id);
 
-        return response()->json([
-            'customers' => CustomerResource::collection($customers)
-        ]);
+        return $customers
+            ? response()->json(CustomerResource::collection($customers), Response::HTTP_OK)
+            : response()->json([], Response::HTTP_NO_CONTENT);
     }
 
     public function store(
@@ -45,11 +42,10 @@ class CustomerController extends Controller
     }
 
     public function show(
-        ShowCustomerRequest $request,
+        string $customerId,
         ShowCustomerUseCase $showCustomerUseCase
     ): JsonResponse {
-        $customerId = $request->input('customer_id');
-        $customer = $showCustomerUseCase->execute($customerId);
+        $customer = $showCustomerUseCase->execute($customerId, auth()->user()->id);
 
         if (!$customer) {
             return response()->json(

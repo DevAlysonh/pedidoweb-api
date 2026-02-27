@@ -13,7 +13,7 @@ final class Address
         private string $city,
         private string $state,
         private string $zipcode,
-        private ?string $customerId = null
+        private string $customerId
     ) {}
 
     public function id(): string

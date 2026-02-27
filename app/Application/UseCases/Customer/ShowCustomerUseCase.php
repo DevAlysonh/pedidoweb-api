@@ -4,13 +4,20 @@ namespace App\Application\UseCases\Customer;
 
 use App\Domain\Customer\Repositories\CustomerRepositoryInterface;
 use App\Domain\Customer\Entities\Customer;
+use App\Domain\Customer\Exceptions\UnauthorizedException;
 
 class ShowCustomerUseCase
 {
     public function __construct(private CustomerRepositoryInterface $repository) {}
 
-    public function execute(string $customerId): ?Customer
+    public function execute(string $customerId, string $userId): ?Customer
     {
-        return $this->repository->findById($customerId);
+        $customer = $this->repository->findById($customerId);
+
+        if ($customer->userId() !== $userId) {
+            throw new UnauthorizedException();
+        }
+
+        return $customer;
     }
 }

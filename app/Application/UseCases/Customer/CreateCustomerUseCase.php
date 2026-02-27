@@ -35,6 +35,7 @@ class CreateCustomerUseCase
             city: $dto->city,
             state: $dto->state,
             zipcode: $dto->zipcode,
+            customerId: $customerId
         );
 
         $customer = new Customer(
