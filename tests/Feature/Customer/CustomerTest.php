@@ -96,6 +96,7 @@ class CustomerTest extends TestCase
                 'message' => 'CEP inválido ou incorreto para este endereço: 58052197'
             ]);
     }
+
     public function test_authenticated_user_can_list_customers(): void
     {
         $user = $this->createAuthenticatedUser();
@@ -127,6 +128,48 @@ class CustomerTest extends TestCase
         $response->assertStatus(Response::HTTP_OK);
 
         $this->assertEquals($customer->id, $response->json('data.id'));
+    }
+
+    public function test_authenticated_user_can_update_customer(): void
+    {
+        $user = $this->createAuthenticatedUser();
+
+        $customer = Customer::factory()
+            ->for($user)
+            ->has(Address::factory()->count(1))
+            ->createOne();
+
+        $payload = [
+            'name' => 'Maria Souza',
+            'email' => 'maria@example.com',
+        ];
+
+        $response = $this->actingAs($user, 'api')
+            ->patchJson(route('customer.update', $customer->id), $payload);
+
+        $response->assertStatus(Response::HTTP_OK);
+        $this->assertDatabaseHas('customers', [
+            'id' => $customer->id,
+            'name' => 'Maria Souza',
+            'email' => 'maria@example.com',
+        ]);
+    }
+
+    public function test_authenticated_user_can_delete_customer(): void
+    {
+        $user = $this->createAuthenticatedUser();
+        $this->actingAs($user, 'api');
+
+        $customer = Customer::factory()
+            ->for($user)
+            ->has(Address::factory()->count(1))
+            ->createOne();
+
+        $response = $this->delete(route('customer.delete', $customer->id));
+        $response->assertStatus(Response::HTTP_NO_CONTENT);
+        $this->assertDatabaseMissing('customers', [
+            'id' => $customer->id,
+        ]);
     }
 
     private function createAuthenticatedUser()

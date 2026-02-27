@@ -33,4 +33,63 @@ class CustomerTest extends TestCase
         $this->assertEquals('joao@email.com', $customer->email());
         $this->assertSame($address, $customer->address());
     }
+
+    public function testCustomerSnapshot()
+    {
+        $address = new Address(
+            id: 'addr_1',
+            street: 'Rua A',
+            number: '123',
+            city: 'Cidade',
+            state: 'SP',
+            zipcode: '12345-678',
+            customerId: CustomerId::fromString('cus_1')
+        );
+        $customer = new Customer(
+            id: CustomerId::fromString('cus_1'),
+            name: 'João',
+            email: 'joao@email.com',
+            address: $address,
+            userId: UserId::fromString('user_1')
+        );
+
+        $snapshot = $customer->snapshot();
+
+        $this->assertEquals([
+            'id' => 'cus_1',
+            'name' => 'João',
+            'email' => 'joao@email.com',
+            'address' => [
+                'street' => 'Rua A',
+                'number' => '123',
+                'city' => 'Cidade',
+                'state' => 'SP',
+                'zipcode' => '12345-678',
+            ],
+            'user_id' => 'user_1'
+        ], $snapshot);
+    }
+
+    public function testCustomerUpdate()
+    {
+        $address = new Address(
+            id: 'addr_1',
+            street: 'Rua A',
+            number: '123',
+            city: 'Cidade',
+            state: 'SP',
+            zipcode: '12345-678',
+            customerId: CustomerId::fromString('cus_1')
+        );
+        $customer = new Customer(
+            id: CustomerId::fromString('cus_1'),
+            name: 'João',
+            email: 'joao@email.com',
+            address: $address,
+            userId: UserId::fromString('user_1')
+        );
+        $customer->update('Maria', 'maria@email.com');
+        $this->assertEquals('Maria', $customer->name());
+        $this->assertEquals('maria@email.com', $customer->email());
+    }
 }

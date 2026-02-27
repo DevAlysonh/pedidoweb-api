@@ -15,10 +15,14 @@ class CreateCustomerUseCaseTest extends TestCase
     public function testExecuteSuccess()
     {
         $dto = new CreateCustomerDTO('João', 'joao@email.com', 'Rua A', '123', 'Cidade', 'SP', '12345-678');
-        $repository = $this->createMock(CustomerRepositoryInterface::class);
+        $repository = $this->getMockBuilder(CustomerRepositoryInterface::class)
+            ->onlyMethods(['findById', 'save', 'findAllByUser', 'delete'])
+            ->getMock();
         $idGenerator = $this->createMock(IdGeneratorInterface::class);
         $cepService = $this->createMock(CepService::class);
-        $logger = $this->createMock(LoggerInterface::class);
+        $logger = $this->getMockBuilder(LoggerInterface::class)
+            ->onlyMethods(['info', 'warning', 'debug', 'error'])
+            ->getMock();
 
         $cepData = new CepData(
             zipcode: '12345-678',
@@ -37,7 +41,7 @@ class CreateCustomerUseCaseTest extends TestCase
         $useCase = new CreateCustomerUseCase($repository, $idGenerator, $cepService, $logger);
 
         $userId = UserId::fromString('user_1');
-        $customer = $useCase->execute($userId,$dto);
+        $customer = $useCase->execute($userId, $dto);
 
         $this->assertEquals('cus_1', $customer->id());
         $this->assertEquals('João', $customer->name());
@@ -57,6 +61,6 @@ class CreateCustomerUseCaseTest extends TestCase
 
         $this->expectException(\App\Domain\Customer\Exceptions\InvalidZipcodeException::class);
         $userId = UserId::fromString('user_1');
-        $useCase->execute($userId,$dto);
+        $useCase->execute($userId, $dto);
     }
 }

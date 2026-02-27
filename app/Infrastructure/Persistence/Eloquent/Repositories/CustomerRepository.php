@@ -10,6 +10,7 @@ use App\Domain\Shared\Interfaces\LoggerInterface;
 use App\Domain\User\VO\UserId;
 use App\Infrastructure\Persistence\Eloquent\Models\Address as AddressModel;
 use App\Infrastructure\Persistence\Eloquent\Models\Customer as CustomerModel;
+use DateTimeImmutable;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -23,22 +24,26 @@ class CustomerRepository implements CustomerRepositoryInterface
     {
         try {
             DB::transaction(function () use ($customer) {
-                CustomerModel::create([
-                    'id' => $customer->id()->value(),
-                    'name' => $customer->name(),
-                    'email' => $customer->email(),
-                    'user_id' => $customer->userId()->value(),
-                ]);
+                CustomerModel::updateOrCreate(
+                    ['id' => $customer->id()->value()],
+                    [
+                        'name' => $customer->name(),
+                        'email' => $customer->email(),
+                        'user_id' => $customer->userId()->value(),
+                    ]
+                );
 
-                AddressModel::create([
-                    'id' => $customer->address()->id(),
-                    'customer_id' => $customer->id()->value(),
-                    'street' => $customer->address()->street(),
-                    'number' => $customer->address()->number(),
-                    'city' => $customer->address()->city(),
-                    'state' => $customer->address()->state(),
-                    'zipcode' => $customer->address()->zipcode(),
-                ]);
+                AddressModel::updateOrCreate(
+                    ['id' => $customer->address()->id()],
+                    [
+                        'customer_id' => $customer->id()->value(),
+                        'street' => $customer->address()->street(),
+                        'number' => $customer->address()->number(),
+                        'city' => $customer->address()->city(),
+                        'state' => $customer->address()->state(),
+                        'zipcode' => $customer->address()->zipcode(),
+                    ]
+                );
             });
         } catch (Throwable $e) {
             $this->logger->error('Erro ao persistir cliente', [
@@ -57,7 +62,7 @@ class CustomerRepository implements CustomerRepositoryInterface
             ->get();
 
         return $Customers
-            ->map(fn ($model) => $this->toDomain($model))
+            ->map(fn($model) => $this->toDomain($model))
             ->toArray();
     }
 
@@ -67,6 +72,17 @@ class CustomerRepository implements CustomerRepositoryInterface
             ->find($customerId->value());
 
         return $Customer ? $this->toDomain($Customer) : null;
+    }
+
+    public function delete(Customer $customer): void
+    {
+        CustomerModel::destroy($customer->id()->value());
+
+        $this->logger->info('Cliente excluído', [
+            'customer_id' => $customer->id(),
+            'user_id' => $customer->userId(),
+            'date' => new DateTimeImmutable(),
+        ]);
     }
 
     private function toDomain(CustomerModel $model): Customer
