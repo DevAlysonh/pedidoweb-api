@@ -49,6 +49,11 @@ final class Customer
         $this->email = $email ?: $this->email;
     }
 
+    public function changeAddress(Address $address): void
+    {
+        $this->address = $address;
+    }
+
     public function snapshot(): array
     {
         return [

@@ -172,6 +172,37 @@ class CustomerTest extends TestCase
         ]);
     }
 
+    public function test_authenticated_user_can_update_customer_address(): void
+    {
+        $user = $this->createAuthenticatedUser();
+
+        $customer = Customer::factory()
+            ->for($user)
+            ->has(Address::factory()->count(1))
+            ->createOne();
+
+        $payload = [
+            'street' => 'Avenida B',
+            'number' => '456',
+            'city' => 'João Pessoa',
+            'state' => 'PB',
+            'zipcode' => '58052197'
+        ];
+
+        $response = $this->actingAs($user, 'api')
+            ->patchJson(route('customer.update-address', $customer->id), $payload);
+
+        $response->assertStatus(Response::HTTP_OK);
+        $this->assertDatabaseHas('addresses', [
+            'id' => $customer->address->id,
+            'street' => 'Avenida B',
+            'number' => '456',
+            'city' => 'João Pessoa',
+            'state' => 'PB',
+            'zipcode' => '58052197'
+        ]);
+    }
+
     private function createAuthenticatedUser()
     {
         return User::factory()->createOne();
