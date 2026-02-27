@@ -17,5 +17,6 @@ Route::prefix('v1')->group(function () {
 
     Route::middleware('auth:api')->group(function () {
         Route::post('customers', [CustomerController::class, 'store'])->name('customer.create');
+        Route::get('customers', [CustomerController::class, 'index'])->name('customer.list');
     });
 });

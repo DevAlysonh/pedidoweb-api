@@ -95,7 +95,28 @@ class CustomerTest extends TestCase
                 'message' => 'CEP inválido ou incorreto para este endereço: 58052197'
             ]);
     }
+        public function test_authenticated_user_can_list_customers(): void
+        {
+            $user = $this->createAuthenticatedUser();
+            $this->actingAs($user, 'api');
+            // Cria alguns clientes
+            $customers = \App\Models\Customer::factory()->count(3)->create(['user_id' => $user->id]);
+            $response = $this->getJson(route('customer.index'));
+            $response->assertStatus(Response::HTTP_OK);
+            $response->assertJsonStructure(['customers']);
+            $this->assertCount(3, $response->json('customers'));
+        }
 
+        public function test_authenticated_user_can_show_customer(): void
+        {
+            $user = $this->createAuthenticatedUser();
+            $this->actingAs($user, 'api');
+            $customer = \App\Models\Customer::factory()->create(['user_id' => $user->id]);
+            $response = $this->postJson(route('customer.show'), ['customer_id' => $customer->id]);
+            $response->assertStatus(Response::HTTP_OK);
+            $response->assertJsonStructure(['customer']);
+            $this->assertEquals($customer->id, $response->json('customer.id'));
+        }
     private function createAuthenticatedUser()
     {
         return User::factory()->createOne();
