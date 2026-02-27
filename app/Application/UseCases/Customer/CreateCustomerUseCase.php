@@ -9,6 +9,7 @@ use App\Domain\Customer\Repositories\CustomerRepositoryInterface;
 use App\Domain\Customer\VO\Address;
 use App\Domain\Shared\Interfaces\IdGeneratorInterface;
 use App\Domain\Shared\Interfaces\LoggerInterface;
+use App\Domain\User\Entities\User;
 use App\Infrastructure\Services\CepService;
 
 class CreateCustomerUseCase
@@ -20,7 +21,7 @@ class CreateCustomerUseCase
         private LoggerInterface $logger
     ) {}
 
-    public function execute(CreateCustomerDTO $dto): Customer
+    public function execute(string $userId, CreateCustomerDTO $dto): Customer
     {
         $this->validateAddress($dto);
 
@@ -40,7 +41,8 @@ class CreateCustomerUseCase
             id: $customerId,
             name: $dto->name,
             email: $dto->email,
-            address: $address
+            address: $address,
+            userId: $userId
         );
 
         $this->repository->save($customer);

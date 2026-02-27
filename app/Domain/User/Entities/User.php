@@ -1,20 +1,15 @@
 <?php
 
-namespace App\Domain\Customer\Entities;
+namespace App\Domain\User\Entities;
 
-use App\Domain\Customer\VO\Address;
-
-final class Customer
+final class User
 {
-    public const PREFIX = 'cus_';
-
     public function __construct(
         private string $id,
         private string $name,
         private string $email,
-        private Address $address,
-        private string $userId
-    ) { }
+        private string $password
+    ) {}
 
     public function id(): string
     {
@@ -31,13 +26,8 @@ final class Customer
         return $this->email;
     }
 
-    public function address(): Address
+    public function password(): string
     {
-        return $this->address;
-    }
-
-    public function userId(): string
-    {
-        return $this->userId;
+        return $this->password;
     }
 }

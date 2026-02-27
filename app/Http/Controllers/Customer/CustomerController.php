@@ -34,7 +34,10 @@ class CustomerController extends Controller
     ): JsonResponse {
         $createCustomerDto = CreateCustomerDTO::fromRequest($request->validated());
 
-        $createdCustomer = $createCustomerUseCase->execute($createCustomerDto);
+        $createdCustomer = $createCustomerUseCase->execute(
+            auth()->user()->id,
+            $createCustomerDto
+        );
 
         return (new CustomerResource($createdCustomer))
             ->response()

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Infrastructure\Persistence\Eloquent\Models\UserModel;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,7 +20,7 @@ class AuthController extends Controller
 
         $validated['password'] = Hash::make($validated['password']);
 
-        $user = User::create($validated);
+        $user = UserModel::create($validated);
 
         $token = Auth::login($user);
 

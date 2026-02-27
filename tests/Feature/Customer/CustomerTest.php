@@ -3,8 +3,7 @@
 namespace Tests\Feature\Customer;
 
 use App\Application\Dto\CepData;
-use App\Domain\Customer\Exceptions\InvalidZipcodeException;
-use App\Models\User;
+use App\Infrastructure\Persistence\Eloquent\Models\UserModel;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Response;
 use Tests\TestCase;
@@ -119,7 +118,7 @@ class CustomerTest extends TestCase
         }
     private function createAuthenticatedUser()
     {
-        return User::factory()->createOne();
+        return UserModel::factory()->createOne();
     }
 
     private function fakeCepService(

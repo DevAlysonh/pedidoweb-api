@@ -25,6 +25,7 @@ class CustomerRepository implements CustomerRepositoryInterface
                     'id' => $customer->id(),
                     'name' => $customer->name(),
                     'email' => $customer->email(),
+                    'user_id' => $customer->userId(),
                 ]);
 
                 AddressModel::create([
