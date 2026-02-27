@@ -3,6 +3,8 @@
 use App\Domain\Customer\Entities\Customer;
 use App\Domain\Customer\Repositories\CustomerRepositoryInterface;
 use App\Domain\Customer\VO\Address;
+use App\Domain\Customer\VO\CustomerId;
+use App\Domain\User\VO\UserId;
 use PHPUnit\Framework\TestCase;
 
 class CustomerRepositoryInterfaceTest extends TestCase
@@ -11,16 +13,18 @@ class CustomerRepositoryInterfaceTest extends TestCase
     {
         $repository = $this->createMock(CustomerRepositoryInterface::class);
         $customer = new Customer(
-            id: 'cus_1',
+            id: CustomerId::fromString('cus_1'),
             name: 'João',
             email:'joao@email.com',
+            userId: UserId::fromString('user_1'),
             address: new Address(
                 id: 'addr_1',
                 street: 'Rua A',
                 number: '123',
                 city: 'Cidade',
                 state: 'SP',
-                zipcode: '12345678'
+                zipcode: '12345678',
+                customerId: 'cus_1'
             )
         );
 
