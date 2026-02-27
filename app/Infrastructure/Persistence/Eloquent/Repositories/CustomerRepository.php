@@ -23,22 +23,26 @@ class CustomerRepository implements CustomerRepositoryInterface
     {
         try {
             DB::transaction(function () use ($customer) {
-                CustomerModel::create([
-                    'id' => $customer->id()->value(),
-                    'name' => $customer->name(),
-                    'email' => $customer->email(),
-                    'user_id' => $customer->userId()->value(),
-                ]);
+                CustomerModel::updateOrCreate(
+                    ['id' => $customer->id()->value()],
+                    [
+                        'name' => $customer->name(),
+                        'email' => $customer->email(),
+                        'user_id' => $customer->userId()->value(),
+                    ]
+                );
 
-                AddressModel::create([
-                    'id' => $customer->address()->id(),
-                    'customer_id' => $customer->id()->value(),
-                    'street' => $customer->address()->street(),
-                    'number' => $customer->address()->number(),
-                    'city' => $customer->address()->city(),
-                    'state' => $customer->address()->state(),
-                    'zipcode' => $customer->address()->zipcode(),
-                ]);
+                AddressModel::updateOrCreate(
+                    ['id' => $customer->address()->id()],
+                    [
+                        'customer_id' => $customer->id()->value(),
+                        'street' => $customer->address()->street(),
+                        'number' => $customer->address()->number(),
+                        'city' => $customer->address()->city(),
+                        'state' => $customer->address()->state(),
+                        'zipcode' => $customer->address()->zipcode(),
+                    ]
+                );
             });
         } catch (Throwable $e) {
             $this->logger->error('Erro ao persistir cliente', [
@@ -57,7 +61,7 @@ class CustomerRepository implements CustomerRepositoryInterface
             ->get();
 
         return $Customers
-            ->map(fn ($model) => $this->toDomain($model))
+            ->map(fn($model) => $this->toDomain($model))
             ->toArray();
     }
 
@@ -67,6 +71,40 @@ class CustomerRepository implements CustomerRepositoryInterface
             ->find($customerId->value());
 
         return $Customer ? $this->toDomain($Customer) : null;
+    }
+
+    public function update(Customer $customer): void
+    {
+        try {
+            CustomerModel::where('id', $customer->id()->value())->update([
+                'name' => $customer->name(),
+                'email' => $customer->email(),
+            ]);
+        } catch (Throwable $e) {
+            $this->logger->error('Erro ao atualizar cliente', [
+                'customer_id' => $customer->id()->value(),
+                'error' => $e->getMessage(),
+                'exception' => get_class($e),
+            ]);
+
+            throw $e;
+        }
+    }
+
+    public function delete(string $customerId): void
+    {
+        try {
+            $customer = CustomerModel::find($customerId);
+            if (!$customer) {
+            }
+            $customer->delete();
+        } catch (Throwable $e) {
+            $this->logger->error('Erro ao deletar cliente', [
+                'customer_id' => $customerId,
+                'error' => $e->getMessage(),
+                'exception' => get_class($e),
+            ]);
+        }
     }
 
     private function toDomain(CustomerModel $model): Customer

@@ -19,5 +19,7 @@ Route::prefix('v1')->group(function () {
         Route::post('customers', [CustomerController::class, 'store'])->name('customer.create');
         Route::get('customers', [CustomerController::class, 'index'])->name('customer.index');
         Route::get('customers/{customerId}', [CustomerController::class, 'show'])->name('customer.show');
+        Route::patch('customers/{customerId}', [CustomerController::class, 'update'])->name('customer.update');
+        Route::delete('customers/{customerId}', [CustomerController::class, 'destroy'])->name('customer.delete');
     });
 });
