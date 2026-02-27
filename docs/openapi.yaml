@@ -404,6 +404,171 @@ paths:
               example:
                 message: "Unauthenticated"
 
+  /customers/{customerId}/address:
+    patch:
+      summary: Atualizar endereço de um cliente
+      tags:
+      - Customer
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: customerId
+        in: path
+        required: true
+        description: ID único do cliente
+        schema:
+          type: string
+          example: "cus_abc123xyz789"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                street:
+                  type: string
+                  maxLength: 255
+                  description: Rua do endereço (opcional)
+                  example: "Av. Paulista"
+                number:
+                  type: string
+                  maxLength: 10
+                  description: Número do endereço (opcional)
+                  example: "1000"
+                city:
+                  type: string
+                  maxLength: 255
+                  description: Cidade (opcional)
+                  example: "São Paulo"
+                state:
+                  type: string
+                  minLength: 2
+                  maxLength: 2
+                  description: Estado (UF) (opcional)
+                  example: "SP"
+                zipcode:
+                  type: string
+                  pattern: '^\d{5}-?\d{3}$'
+                  maxLength: 9
+                  description: CEP (opcional)
+                  example: "01311-100"
+            example:
+              street: "Av. Paulista"
+              number: "1000"
+              city: "São Paulo"
+              state: "SP"
+              zipcode: "01311-100"
+      responses:
+        '200':
+          description: Endereço do cliente atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: "cus_abc123xyz789"
+                      name:
+                        type: string
+                        example: "João Silva"
+                      email:
+                        type: string
+                        example: "joao@example.com"
+                      user_id:
+                        type: string
+                        example: "usr_123456"
+                      address:
+                        type: object
+                        properties:
+                          address_id:
+                            type: string
+                            example: "addr_123"
+                          street:
+                            type: string
+                            example: "Av. Paulista"
+                          number:
+                            type: string
+                            example: "1000"
+                          city:
+                            type: string
+                            example: "São Paulo"
+                          state:
+                            type: string
+                            example: "SP"
+                          zipcode:
+                            type: string
+                            example: "01311-100"
+                          customer_id:
+                            type: string
+                            example: "cus_abc123xyz789"
+              example:
+                data:
+                  id: "cus_abc123xyz789"
+                  name: "João Silva"
+                  email: "joao@example.com"
+                  user_id: "usr_123456"
+                  address:
+                    address_id: "addr_123"
+                    street: "Av. Paulista"
+                    number: "1000"
+                    city: "São Paulo"
+                    state: "SP"
+                    zipcode: "01311-100"
+                    customer_id: "cus_abc123xyz789"
+        '422':
+          description: Erro de validação
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "The given data was invalid."
+                  errors:
+                    type: object
+              example:
+                message: "The given data was invalid."
+                errors:
+                  zipcode: [ "The zipcode format is invalid." ]
+        '404':
+          description: Cliente não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Recurso não encontrado"
+                  error:
+                    type: string
+                    example: "not_found"
+              example:
+                message: "Recurso não encontrado"
+                error: "not_found"
+        '401':
+          description: Não autenticado ou acesso negado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Acesso não autorizado"
+                  error:
+                    type: string
+                    example: "unauthorized"
+              example:
+                message: "Acesso não autorizado"
+                error: "unauthorized"
+
   /customers/{customerId}:
     get:
       summary: Obter detalhes de um cliente específico
