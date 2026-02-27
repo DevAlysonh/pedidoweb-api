@@ -23,13 +23,23 @@ paths:
               properties:
                 name:
                   type: string
+                  example: "João Silva"
                 email:
                   type: string
+                  format: email
+                  example: "joao@example.com"
                 password:
                   type: string
+                  format: password
+                  minLength: 8
+                  example: "senha123secure"
+            example:
+              name: "João Silva"
+              email: "joao@example.com"
+              password: "senha123secure"
       responses:
         '200':
-          description: Token JWT retornado
+          description: Usuário registrado com sucesso e token JWT retornado
           content:
             application/json:
               schema:
@@ -37,14 +47,36 @@ paths:
                 properties:
                   access_token:
                     type: string
+                    example: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
                   token_type:
                     type: string
+                    example: "Bearer"
                   expires_in:
                     type: integer
+                    example: 3600
+              example:
+                access_token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+                token_type: "Bearer"
+                expires_in: 3600
+        '422':
+          description: Erro de validação
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "The given data was invalid."
+                  errors:
+                    type: object
+                    example:
+                      email: [ "The email has already been taken." ]
+                      password: [ "The password must be at least 8 characters." ]
 
   /auth/login:
     post:
-      summary: Login do usuário
+      summary: Autenticar usuário
       tags:
       - Auth
       requestBody:
@@ -57,15 +89,67 @@ paths:
               properties:
                 email:
                   type: string
+                  format: email
+                  example: "joao@example.com"
                 password:
                   type: string
+                  format: password
+                  example: "senha123secure"
+            example:
+              email: "joao@example.com"
+              password: "senha123secure"
       responses:
         '200':
-          description: Token JWT retornado
+          description: Login realizado com sucesso e token JWT retornado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    example: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+                  token_type:
+                    type: string
+                    example: "Bearer"
+                  expires_in:
+                    type: integer
+                    example: 3600
+              example:
+                access_token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+                token_type: "Bearer"
+                expires_in: 3600
+        '401':
+          description: Credenciais inválidas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Invalid credentials"
+              example:
+                message: "Invalid credentials"
+        '422':
+          description: Erro de validação
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  errors:
+                    type: object
+              example:
+                message: "The given data was invalid."
+                errors:
+                  email: [ "The email field is required." ]
 
   /auth/logout:
     post:
-      summary: Logout do usuário autenticado
+      summary: Fazer logout do usuário autenticado
       tags: [ Auth ]
       security:
       - bearerAuth: []
@@ -79,10 +163,105 @@ paths:
                 properties:
                   message:
                     type: string
+                    example: "Successfully logged out"
+              example:
+                message: "Successfully logged out"
         '401':
-          description: Não autenticado
+          description: Não autenticado (token inválido ou ausente)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Unauthenticated"
+              example:
+                message: "Unauthenticated"
 
   /customers:
+    get:
+      summary: Listar todos os clientes do usuário autenticado
+      tags:
+      - Customer
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Lista de clientes retornada com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: "cus_abc123xyz789"
+                        name:
+                          type: string
+                          example: "João Silva"
+                        email:
+                          type: string
+                          format: email
+                          example: "joao@example.com"
+                        user_id:
+                          type: string
+                          example: "usr_123456"
+                        address:
+                          type: object
+                          properties:
+                            address_id:
+                              type: string
+                              example: "addr_123"
+                            street:
+                              type: string
+                              example: "Rua Principal"
+                            number:
+                              type: string
+                              example: "123"
+                            city:
+                              type: string
+                              example: "São Paulo"
+                            state:
+                              type: string
+                              example: "SP"
+                            zipcode:
+                              type: string
+                              example: "01310-100"
+                            customer_id:
+                              type: string
+                              example: "cus_abc123xyz789"
+              example:
+                data:
+                - id: "cus_abc123xyz789"
+                  name: "João Silva"
+                  email: "joao@example.com"
+                  user_id: "usr_123456"
+                  address:
+                    address_id: "addr_123"
+                    street: "Rua Principal"
+                    number: "123"
+                    city: "São Paulo"
+                    state: "SP"
+                    zipcode: "01310-100"
+                    customer_id: "cus_abc123xyz789"
+        '401':
+          description: Não autenticado (token inválido ou ausente)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Unauthenticated"
+              example:
+                message: "Unauthenticated"
     post:
       summary: Criar novo cliente
       tags:
@@ -127,6 +306,14 @@ paths:
                   pattern: '^\d{5}-?\d{3}$'
                   maxLength: 9
                   example: "01310-100"
+            example:
+              name: "João Silva"
+              email: "joao@example.com"
+              street: "Rua Principal"
+              number: "123"
+              city: "São Paulo"
+              state: "SP"
+              zipcode: "01310-100"
       responses:
         '201':
           description: Cliente criado com sucesso
@@ -138,60 +325,380 @@ paths:
                   data:
                     type: object
                     properties:
-                      mensagem:
+                      id:
                         type: string
-                        example: "Cliente criado com sucesso"
-                      customer:
+                        example: "cus_abc123xyz789"
+                      name:
+                        type: string
+                        example: "João Silva"
+                      email:
+                        type: string
+                        example: "joao@example.com"
+                      user_id:
+                        type: string
+                        example: "usr_123456"
+                      address:
                         type: object
                         properties:
-                          id:
+                          address_id:
+                            type: string
+                            example: "addr_123"
+                          street:
+                            type: string
+                            example: "Rua Principal"
+                          number:
+                            type: string
+                            example: "123"
+                          city:
+                            type: string
+                            example: "São Paulo"
+                          state:
+                            type: string
+                            example: "SP"
+                          zipcode:
+                            type: string
+                            example: "01310-100"
+                          customer_id:
                             type: string
                             example: "cus_abc123xyz789"
-                          name:
-                            type: string
-                          email:
-                            type: string
-                          address:
-                            type: object
-                            properties:
-                              street:
-                                type: string
-                              number:
-                                type: string
-                              city:
-                                type: string
-                              state:
-                                type: string
-                              zipcode:
-                                type: string
+              example:
+                data:
+                  id: "cus_abc123xyz789"
+                  name: "João Silva"
+                  email: "joao@example.com"
+                  user_id: "usr_123456"
+                  address:
+                    address_id: "addr_123"
+                    street: "Rua Principal"
+                    number: "123"
+                    city: "São Paulo"
+                    state: "SP"
+                    zipcode: "01310-100"
+                    customer_id: "cus_abc123xyz789"
         '422':
-          description: Erro de validação ou CEP inválido
+          description: CEP inválido ou não encontrado
           content:
             application/json:
               schema:
-                oneOf:
-                - type: object
-                  description: Erro de validação do formulário
-                  properties:
-                    message:
-                      type: string
-                      example: "The given data was invalid."
-                    errors:
-                      type: object
-                      example:
-                        email: [ "The email has already been taken." ]
-                        zipcode: [ "The zipcode format is invalid." ]
-                - type: object
-                  description: Erro de CEP inválido ou não corresponde ao endereço
-                  properties:
-                    message:
-                      type: string
-                      example: "CEP inválido ou incorreto para este endereço: 01310-100"
-                    error:
-                      type: string
-                      example: "invalid_zipcode"
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "CEP inválido ou incorreto para este endereço: 01310-100"
+                  error:
+                    type: string
+                    example: "invalid_zipcode"
+              example:
+                message: "CEP inválido ou incorreto para este endereço: 01310-100"
+                error: "invalid_zipcode"
         '401':
           description: Não autenticado (token inválido ou ausente)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Unauthenticated"
+              example:
+                message: "Unauthenticated"
+
+  /customers/{customerId}:
+    get:
+      summary: Obter detalhes de um cliente específico
+      tags:
+      - Customer
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: customerId
+        in: path
+        required: true
+        description: ID único do cliente
+        schema:
+          type: string
+          example: "cus_abc123xyz789"
+      responses:
+        '200':
+          description: Detalhes do cliente retornados com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: "cus_abc123xyz789"
+                      name:
+                        type: string
+                        example: "João Silva"
+                      email:
+                        type: string
+                        format: email
+                        example: "joao@example.com"
+                      user_id:
+                        type: string
+                        example: "usr_123456"
+                      address:
+                        type: object
+                        properties:
+                          address_id:
+                            type: string
+                            example: "addr_123"
+                          street:
+                            type: string
+                            example: "Rua Principal"
+                          number:
+                            type: string
+                            example: "123"
+                          city:
+                            type: string
+                            example: "São Paulo"
+                          state:
+                            type: string
+                            example: "SP"
+                          zipcode:
+                            type: string
+                            example: "01310-100"
+                          customer_id:
+                            type: string
+                            example: "cus_abc123xyz789"
+              example:
+                data:
+                  id: "cus_abc123xyz789"
+                  name: "João Silva"
+                  email: "joao@example.com"
+                  user_id: "usr_123456"
+                  address:
+                    address_id: "addr_123"
+                    street: "Rua Principal"
+                    number: "123"
+                    city: "São Paulo"
+                    state: "SP"
+                    zipcode: "01310-100"
+                    customer_id: "cus_abc123xyz789"
+        '404':
+          description: Cliente não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Recurso não encontrado"
+                  error:
+                    type: string
+                    example: "not_found"
+              example:
+                message: "Recurso não encontrado"
+                error: "not_found"
+        '401':
+          description: Não autenticado ou acesso negado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Acesso não autorizado"
+                  error:
+                    type: string
+                    example: "unauthorized"
+              example:
+                message: "Acesso não autorizado"
+                error: "unauthorized"
+    patch:
+      summary: Atualizar informações de um cliente
+      tags:
+      - Customer
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: customerId
+        in: path
+        required: true
+        description: ID único do cliente
+        schema:
+          type: string
+          example: "cus_abc123xyz789"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  maxLength: 255
+                  description: Nome completo do cliente (opcional)
+                  example: "João da Silva Santos"
+                email:
+                  type: string
+                  format: email
+                  maxLength: 255
+                  description: Email do cliente (opcional)
+                  example: "joao.silva@example.com"
+            example:
+              name: "João da Silva Santos"
+              email: "joao.silva@example.com"
+      responses:
+        '200':
+          description: Cliente atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: "cus_abc123xyz789"
+                      name:
+                        type: string
+                        example: "João da Silva Santos"
+                      email:
+                        type: string
+                        example: "joao.silva@example.com"
+                      user_id:
+                        type: string
+                        example: "usr_123456"
+                      address:
+                        type: object
+                        properties:
+                          address_id:
+                            type: string
+                          street:
+                            type: string
+                          number:
+                            type: string
+                          city:
+                            type: string
+                          state:
+                            type: string
+                          zipcode:
+                            type: string
+                          customer_id:
+                            type: string
+              example:
+                data:
+                  id: "cus_abc123xyz789"
+                  name: "João da Silva Santos"
+                  email: "joao.silva@example.com"
+                  user_id: "usr_123456"
+                  address:
+                    address_id: "addr_123"
+                    street: "Rua Principal"
+                    number: "123"
+                    city: "São Paulo"
+                    state: "SP"
+                    zipcode: "01310-100"
+                    customer_id: "cus_abc123xyz789"
+        '422':
+          description: Erro de validação
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "The given data was invalid."
+                  errors:
+                    type: object
+              example:
+                message: "The given data was invalid."
+                errors:
+                  email: [ "The email has already been taken." ]
+        '404':
+          description: Cliente não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Recurso não encontrado"
+                  error:
+                    type: string
+                    example: "not_found"
+              example:
+                message: "Recurso não encontrado"
+                error: "not_found"
+        '401':
+          description: Não autenticado ou acesso negado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Acesso não autorizado"
+                  error:
+                    type: string
+                    example: "unauthorized"
+              example:
+                message: "Acesso não autorizado"
+                error: "unauthorized"
+    delete:
+      summary: Deletar um cliente
+      tags:
+      - Customer
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: customerId
+        in: path
+        required: true
+        description: ID único do cliente
+        schema:
+          type: string
+          example: "cus_abc123xyz789"
+      responses:
+        '204':
+          description: Cliente deletado com sucesso (sem conteúdo na resposta)
+        '404':
+          description: Cliente não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Recurso não encontrado"
+                  error:
+                    type: string
+                    example: "not_found"
+              example:
+                message: "Recurso não encontrado"
+                error: "not_found"
+        '401':
+          description: Não autenticado ou acesso negado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Acesso não autorizado"
+                  error:
+                    type: string
+                    example: "unauthorized"
+              example:
+                message: "Acesso não autorizado"
+                error: "unauthorized"
 
 components:
   securitySchemes:
