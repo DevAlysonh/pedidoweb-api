@@ -34,7 +34,9 @@ class ShowCustomerUseCaseTest extends TestCase
             address: $address
         );
 
-        $repository = $this->createMock(CustomerRepositoryInterface::class);
+        $repository = $this->getMockBuilder(CustomerRepositoryInterface::class)
+            ->onlyMethods(['findById', 'save', 'findAllByUser', 'delete'])
+            ->getMock();
         $repository->expects($this->once())
             ->method('findById')
             ->with($customerId)
