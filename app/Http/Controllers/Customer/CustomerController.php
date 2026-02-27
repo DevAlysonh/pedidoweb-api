@@ -6,6 +6,8 @@ use App\Application\Dto\Customer\CreateCustomerDTO;
 use App\Application\UseCases\Customer\CreateCustomerUseCase;
 use App\Application\UseCases\Customer\ListCustomersUseCase;
 use App\Application\UseCases\Customer\ShowCustomerUseCase;
+use App\Domain\Customer\VO\CustomerId;
+use App\Domain\User\VO\UserId;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Customer\CreateCustomerRequest;
 use App\Http\Resources\Customer\CustomerResource;
@@ -14,10 +16,17 @@ use Illuminate\Http\Response;
 
 class CustomerController extends Controller
 {
+    private string $authUserId;
+
+    public function __construct()
+    {
+        $this->authUserId = auth()->id();
+    }
+
     public function index(
         ListCustomersUseCase $listCustomersUseCase
     ): JsonResponse {
-        $customers = $listCustomersUseCase->execute(auth()->user()->id);
+        $customers = $listCustomersUseCase->execute($this->authUserId);
 
         return response()->json(
             CustomerResource::collection($customers),
@@ -32,7 +41,7 @@ class CustomerController extends Controller
         $createCustomerDto = CreateCustomerDTO::fromRequest($request->validated());
 
         $createdCustomer = $createCustomerUseCase->execute(
-            auth()->user()->id,
+            $this->authUserId,
             $createCustomerDto
         );
 
@@ -45,7 +54,10 @@ class CustomerController extends Controller
         string $customerId,
         ShowCustomerUseCase $showCustomerUseCase
     ): JsonResponse {
-        $customer = $showCustomerUseCase->execute($customerId, auth()->id());
+        $customer = $showCustomerUseCase->execute(
+            CustomerId::fromString($customerId),
+            UserId::fromString($this->authUserId)
+        );
 
         return new CustomerResource($customer)
             ->response()

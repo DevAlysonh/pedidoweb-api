@@ -5,7 +5,9 @@ namespace App\Infrastructure\Persistence\Eloquent\Repositories;
 use App\Domain\Customer\Entities\Customer;
 use App\Domain\Customer\Repositories\CustomerRepositoryInterface;
 use App\Domain\Customer\VO\Address;
+use App\Domain\Customer\VO\CustomerId;
 use App\Domain\Shared\Interfaces\LoggerInterface;
+use App\Domain\User\VO\UserId;
 use App\Infrastructure\Persistence\Eloquent\Models\AddressModel;
 use App\Infrastructure\Persistence\Eloquent\Models\CustomerModel;
 use Illuminate\Support\Facades\DB;
@@ -59,21 +61,21 @@ class CustomerRepository implements CustomerRepositoryInterface
             ->toArray();
     }
 
-    public function findById(string $customerId): ?Customer
+    public function findById(CustomerId $customerId): ?Customer
     {
         $customerModel = CustomerModel::with('address')
-            ->find($customerId);
+            ->find($customerId->value());
 
-        return $this->toDomain($customerModel);
+        return $customerModel ? $this->toDomain($customerModel) : null;
     }
 
     private function toDomain(CustomerModel $model): Customer
     {
         return new Customer(
-            id: $model->id,
+            id: CustomerId::fromString($model->id),
             name: $model->name,
             email: $model->email,
-            userId: $model->user_id,
+            userId: UserId::fromString($model->user_id),
             address: new Address(
                 id: $model->address->id,
                 street: $model->address->street,

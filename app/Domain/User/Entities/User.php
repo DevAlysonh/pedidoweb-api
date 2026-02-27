@@ -2,16 +2,18 @@
 
 namespace App\Domain\User\Entities;
 
+use App\Domain\User\VO\UserId;
+
 final class User
 {
     public function __construct(
-        private string $id,
+        private UserId $id,
         private string $name,
         private string $email,
         private string $password
     ) {}
 
-    public function id(): string
+    public function id(): UserId
     {
         return $this->id;
     }

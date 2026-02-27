@@ -6,12 +6,14 @@ use App\Domain\Customer\Repositories\CustomerRepositoryInterface;
 use App\Domain\Customer\Entities\Customer;
 use App\Domain\Customer\Exceptions\CustomerNotFoundException;
 use App\Domain\Customer\Exceptions\UnauthorizedException;
+use App\Domain\Customer\VO\CustomerId;
+use App\Domain\User\VO\UserId;
 
 class ShowCustomerUseCase
 {
     public function __construct(private CustomerRepositoryInterface $repository) {}
 
-    public function execute(string $customerId, string $userId): Customer
+    public function execute(CustomerId $customerId, UserId $userId): Customer
     {
         $customer = $this->repository->findById($customerId);
 
@@ -19,7 +21,7 @@ class ShowCustomerUseCase
             throw new CustomerNotFoundException();
         }
 
-        if ($customer->userId() !== $userId) {
+        if (!$customer->userId()->equals($userId)) {
             throw new UnauthorizedException();
         }
 
