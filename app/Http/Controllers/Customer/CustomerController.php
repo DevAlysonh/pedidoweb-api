@@ -8,7 +8,6 @@ use App\Application\UseCases\Customer\ListCustomersUseCase;
 use App\Application\UseCases\Customer\ShowCustomerUseCase;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Customer\CreateCustomerRequest;
-use App\Http\Requests\Customer\ShowCustomerRequest;
 use App\Http\Resources\Customer\CustomerResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
