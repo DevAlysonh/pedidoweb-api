@@ -8,8 +8,8 @@ use App\Domain\Customer\VO\Address;
 use App\Domain\Customer\VO\CustomerId;
 use App\Domain\Shared\Interfaces\LoggerInterface;
 use App\Domain\User\VO\UserId;
-use App\Infrastructure\Persistence\Eloquent\Models\AddressModel;
-use App\Infrastructure\Persistence\Eloquent\Models\CustomerModel;
+use App\Infrastructure\Persistence\Eloquent\Models\Address as AddressModel;
+use App\Infrastructure\Persistence\Eloquent\Models\Customer as CustomerModel;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -52,21 +52,21 @@ class CustomerRepository implements CustomerRepositoryInterface
 
     public function findAllByUser(string $userId): array
     {
-        $customerModels = CustomerModel::with('address')
+        $Customers = CustomerModel::with('address')
             ->where('user_id', $userId)
             ->get();
 
-        return $customerModels
+        return $Customers
             ->map(fn ($model) => $this->toDomain($model))
             ->toArray();
     }
 
     public function findById(CustomerId $customerId): ?Customer
     {
-        $customerModel = CustomerModel::with('address')
+        $Customer = CustomerModel::with('address')
             ->find($customerId->value());
 
-        return $customerModel ? $this->toDomain($customerModel) : null;
+        return $Customer ? $this->toDomain($Customer) : null;
     }
 
     private function toDomain(CustomerModel $model): Customer

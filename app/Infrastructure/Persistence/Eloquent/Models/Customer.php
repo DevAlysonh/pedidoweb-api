@@ -5,10 +5,14 @@ namespace App\Infrastructure\Persistence\Eloquent\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use App\Infrastructure\Persistence\Eloquent\Models\UserModel;
+use App\Infrastructure\Persistence\Eloquent\Models\User;
+use App\Infrastructure\Persistence\Eloquent\Models\Address;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class CustomerModel extends Model
+class Customer extends Model
 {
+    use HasFactory;
+
     public $incrementing = false;
     protected $keyType = 'string';
     protected $table = 'customers';
@@ -22,11 +26,11 @@ class CustomerModel extends Model
 
     public function address(): HasOne
     {
-        return $this->hasOne(AddressModel::class, 'customer_id', 'id');
+        return $this->hasOne(Address::class, 'customer_id', 'id');
     }
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(UserModel::class, 'user_id', 'id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

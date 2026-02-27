@@ -2,15 +2,15 @@
 
 namespace Database\Factories\Infrastructure\Persistence\Eloquent\Models;
 
-use App\Infrastructure\Persistence\Eloquent\Models\UserModel;
+use App\Infrastructure\Persistence\Eloquent\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 
-class UserModelFactory extends Factory
+class UserFactory extends Factory
 {
-    protected $model = UserModel::class;
+    protected $model = User::class;
     protected static ?string $password;
 
     public function definition(): array

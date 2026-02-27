@@ -7,7 +7,6 @@ use App\Application\UseCases\Customer\CreateCustomerUseCase;
 use App\Application\UseCases\Customer\ListCustomersUseCase;
 use App\Application\UseCases\Customer\ShowCustomerUseCase;
 use App\Domain\Customer\VO\CustomerId;
-use App\Domain\User\Entities\User;
 use App\Domain\User\VO\UserId;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Customer\CreateCustomerRequest;
@@ -17,22 +16,14 @@ use Illuminate\Http\Response;
 
 class CustomerController extends Controller
 {
-    private string $authUserId;
-
-    public function __construct()
-    {
-        $this->authUserId = auth()->id();
-    }
-
     public function index(
         ListCustomersUseCase $listCustomersUseCase
     ): JsonResponse {
-        $customers = $listCustomersUseCase->execute($this->authUserId);
+        $customers = $listCustomersUseCase->execute($this->authUserId());
 
-        return response()->json(
-            CustomerResource::collection($customers),
-            Response::HTTP_OK
-        );
+        return CustomerResource::collection($customers)
+            ->response()
+            ->setStatusCode(Response::HTTP_OK);
     }
 
     public function store(
@@ -42,7 +33,7 @@ class CustomerController extends Controller
         $createCustomerDto = CreateCustomerDTO::fromRequest($request->validated());
 
         $createdCustomer = $createCustomerUseCase->execute(
-            UserId::fromString($this->authUserId),
+            UserId::fromString($this->authUserId()),
             $createCustomerDto
         );
 
@@ -57,11 +48,16 @@ class CustomerController extends Controller
     ): JsonResponse {
         $customer = $showCustomerUseCase->execute(
             CustomerId::fromString($customerId),
-            UserId::fromString($this->authUserId)
+            UserId::fromString($this->authUserId())
         );
 
         return new CustomerResource($customer)
             ->response()
             ->setStatusCode(Response::HTTP_OK);
+    }
+
+    private function authUserId(): UserId
+    {
+        return UserId::fromString(auth()->id());
     }
 }

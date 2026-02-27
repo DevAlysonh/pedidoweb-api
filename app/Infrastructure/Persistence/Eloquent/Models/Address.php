@@ -4,9 +4,13 @@ namespace App\Infrastructure\Persistence\Eloquent\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Infrastructure\Persistence\Eloquent\Models\Customer;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class AddressModel extends Model
+class Address extends Model
 {
+    use HasFactory;
+
     public $incrementing = false;
     protected $keyType = 'string';
     protected $table = 'addresses';
@@ -21,8 +25,8 @@ class AddressModel extends Model
         'zipcode'
     ];
 
-    public function address(): BelongsTo
+    public function customer(): BelongsTo
     {
-        return $this->belongsTo(CustomerModel::class, 'customer_id', 'id');
+        return $this->belongsTo(Customer::class, 'customer_id', 'id');
     }
 }

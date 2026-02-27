@@ -8,8 +8,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use App\Infrastructure\Persistence\Eloquent\Models\Customer;
 
-class UserModel extends Authenticatable implements JWTSubject
+class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable;
 
@@ -55,6 +56,6 @@ class UserModel extends Authenticatable implements JWTSubject
 
     public function customers(): HasMany
     {
-        return $this->hasMany(CustomerModel::class, 'user_id', 'id');
+        return $this->hasMany(Customer::class, 'user_id', 'id');
     }
 }
