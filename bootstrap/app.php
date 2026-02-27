@@ -2,8 +2,11 @@
 
 use App\Domain\Customer\Exceptions\CustomerNotFoundException;
 use App\Domain\Customer\Exceptions\InvalidZipcodeException;
-use App\Domain\Customer\Exceptions\UnauthorizedException;
+use App\Domain\User\Exceptions\UnauthorizedException;
+use App\Domain\User\Exceptions\UserAlreadyExistsException;
+use App\Domain\User\Exceptions\UserNotFoundException;
 use App\Domain\Shared\Interfaces\LoggerInterface;
+use App\Domain\User\Exceptions\InvalidCredentialsException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -61,6 +64,47 @@ return Application::configure(basePath: dirname(__DIR__))
             return response()->json([
                 'message' => $e->getMessage(),
                 'error' => 'unauthorized',
+            ], Response::HTTP_FORBIDDEN);
+        });
+
+        // User exceptions
+        $exceptions->render(function (UserAlreadyExistsException $e, $request) {
+            app(LoggerInterface::class)->error('Usuário já existe', [
+                'email' => $request->input('email'),
+                'error' => $e->getMessage(),
+                'exception' => get_class($e),
+            ]);
+
+            return response()->json([
+                'message' => $e->getMessage(),
+                'error' => 'user_already_exists',
+            ], Response::HTTP_CONFLICT);
+        });
+
+        $exceptions->render(function (UserNotFoundException $e, $request) {
+            app(LoggerInterface::class)->error('Usuário não encontrado', [
+                'user_id' => $request->user()?->id,
+                'error' => $e->getMessage(),
+                'exception' => get_class($e),
+            ]);
+
+            return response()->json([
+                'message' => $e->getMessage(),
+                'error' => 'user_not_found',
+            ], Response::HTTP_NOT_FOUND);
+        });
+
+        $exceptions->render(function (InvalidCredentialsException $e, $request) {
+            app(LoggerInterface::class)->error('Credenciais inválidas', [
+                'email' => $request->input('email'),
+                'ip' => $request->ip(),
+                'error' => $e->getMessage(),
+                'exception' => get_class($e),
+            ]);
+
+            return response()->json([
+                'message' => $e->getMessage(),
+                'error' => 'invalid_credentials',
             ], Response::HTTP_UNAUTHORIZED);
         });
     })->create();

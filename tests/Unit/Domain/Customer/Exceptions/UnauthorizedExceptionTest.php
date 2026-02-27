@@ -1,6 +1,6 @@
 <?php
 
-use App\Domain\Customer\Exceptions\UnauthorizedException;
+use App\Domain\User\Exceptions\UnauthorizedException;
 use PHPUnit\Framework\TestCase;
 
 class UnauthorizedExceptionTest extends TestCase

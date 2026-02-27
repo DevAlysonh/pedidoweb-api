@@ -2,40 +2,58 @@
 
 namespace App\Infrastructure\Persistence\Eloquent\Repositories;
 
-use App\Domain\User\Entities\User as DomainUser;
+use App\Domain\User\Entities\User;
 use App\Domain\User\Repositories\UserRepositoryInterface;
-use App\Infrastructure\Persistence\Eloquent\Models\User as EloquentUser;
+use App\Domain\User\VO\UserId;
+use App\Infrastructure\Persistence\Eloquent\Models\User as UserModel;
+use Throwable;
 
-// TODO: Refatorar o regerenciamento de usuarios no auth controller, para usar usecases.
 class UserRepository implements UserRepositoryInterface
 {
-    public function findById(string $id): ?DomainUser
+    public function findById(string $id): ?User
     {
-        $user = EloquentUser::find($id);
+        $user = UserModel::find($id);
         return $user ? $this->toDomain($user) : null;
     }
 
-    public function findByEmail(string $email): ?DomainUser
+    public function findByEmail(string $email): ?User
     {
-        $user = EloquentUser::where('email', $email)->first();
+        $user = UserModel::where('email', $email)->first();
+
         return $user ? $this->toDomain($user) : null;
     }
 
-    public function save(DomainUser $user): void
+    public function save(User $user): void
     {
-        $eloquentUser = new EloquentUser();
-        $eloquentUser->id = $user->id();
-        $eloquentUser->name = $user->name();
-        $eloquentUser->email = $user->email();
-        $eloquentUser->save();
+        try {
+            $userModel = UserModel::find($user->id()->value());
+
+            if ($userModel) {
+                $userModel->update([
+                    'name' => $user->name(),
+                    'email' => $user->email(),
+                    'password' => $user->password(),
+                ]);
+            } else {
+                UserModel::create([
+                    'id' => $user->id()->value(),
+                    'name' => $user->name(),
+                    'email' => $user->email(),
+                    'password' => $user->password(),
+                ]);
+            }
+        } catch (Throwable $e) {
+            throw $e;
+        }
     }
 
-    // private function toDomain(EloquentUser $user): DomainUser
-    // {
-    //     return new DomainUser(
-    //         $user->id,
-    //         $user->name,
-    //         $user->email
-    //     );
-    // }
+    private function toDomain(UserModel $user): User
+    {
+        return new User(
+            id: UserId::fromString($user->id),
+            name: $user->name,
+            email: $user->email,
+            password: $user->password
+        );
+    }
 }

@@ -7,7 +7,7 @@ use App\Application\Shared\Traits\DiffTrait;
 use App\Domain\Customer\Entities\Customer;
 use App\Domain\Customer\Exceptions\CustomerNotFoundException;
 use App\Domain\Customer\Exceptions\InvalidZipcodeException;
-use App\Domain\Customer\Exceptions\UnauthorizedException;
+use App\Domain\User\Exceptions\UnauthorizedException;
 use App\Domain\Customer\Repositories\CustomerRepositoryInterface;
 use App\Domain\Customer\VO\Address;
 use App\Domain\Customer\VO\CustomerId;
