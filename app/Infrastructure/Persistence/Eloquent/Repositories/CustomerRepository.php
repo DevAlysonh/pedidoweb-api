@@ -4,9 +4,12 @@ namespace App\Infrastructure\Persistence\Eloquent\Repositories;
 
 use App\Domain\Customer\Entities\Customer;
 use App\Domain\Customer\Repositories\CustomerRepositoryInterface;
+use App\Domain\Customer\VO\Address;
+use App\Domain\Customer\VO\CustomerId;
 use App\Domain\Shared\Interfaces\LoggerInterface;
-use App\Infrastructure\Persistence\Eloquent\Models\AddressModel;
-use App\Infrastructure\Persistence\Eloquent\Models\CustomerModel;
+use App\Domain\User\VO\UserId;
+use App\Infrastructure\Persistence\Eloquent\Models\Address as AddressModel;
+use App\Infrastructure\Persistence\Eloquent\Models\Customer as CustomerModel;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -21,14 +24,15 @@ class CustomerRepository implements CustomerRepositoryInterface
         try {
             DB::transaction(function () use ($customer) {
                 CustomerModel::create([
-                    'id' => $customer->id(),
+                    'id' => $customer->id()->value(),
                     'name' => $customer->name(),
                     'email' => $customer->email(),
+                    'user_id' => $customer->userId()->value(),
                 ]);
 
                 AddressModel::create([
                     'id' => $customer->address()->id(),
-                    'customer_id' => $customer->id(),
+                    'customer_id' => $customer->id()->value(),
                     'street' => $customer->address()->street(),
                     'number' => $customer->address()->number(),
                     'city' => $customer->address()->city(),
@@ -44,5 +48,43 @@ class CustomerRepository implements CustomerRepositoryInterface
             ]);
             throw $e;
         }
+    }
+
+    public function findAllByUser(string $userId): array
+    {
+        $Customers = CustomerModel::with('address')
+            ->where('user_id', $userId)
+            ->get();
+
+        return $Customers
+            ->map(fn ($model) => $this->toDomain($model))
+            ->toArray();
+    }
+
+    public function findById(CustomerId $customerId): ?Customer
+    {
+        $Customer = CustomerModel::with('address')
+            ->find($customerId->value());
+
+        return $Customer ? $this->toDomain($Customer) : null;
+    }
+
+    private function toDomain(CustomerModel $model): Customer
+    {
+        return new Customer(
+            id: CustomerId::fromString($model->id),
+            name: $model->name,
+            email: $model->email,
+            userId: UserId::fromString($model->user_id),
+            address: new Address(
+                id: $model->address->id,
+                street: $model->address->street,
+                number: $model->address->number,
+                city: $model->address->city,
+                state: $model->address->state,
+                zipcode: $model->address->zipcode,
+                customerId: $model->id
+            )
+        );
     }
 }

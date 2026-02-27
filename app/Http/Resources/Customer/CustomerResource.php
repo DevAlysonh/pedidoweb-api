@@ -7,26 +7,21 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class CustomerResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(Request $request): array
     {
         return [
-            'message' => 'Cliente criado com sucesso',
-            'customer' => [
-                'id' => $this->id(),
-                'name' => $this->name(),
-                'email' => $this->email(),
-                'address' => [
-                    'street' => $this->address()->street(),
-                    'number' => $this->address()->number(),
-                    'city' => $this->address()->city(),
-                    'state' => $this->address()->state(),
-                    'zipcode' => $this->address()->zipcode(),
-                ],
+            'id' => $this->id()->value(),
+            'name' => $this->name(),
+            'email' => $this->email(),
+            'user_id' => $this->userId()->value(),
+            'address' => [
+                'address_id' => $this->address()->id(),
+                'street' => $this->address()->street(),
+                'number' => $this->address()->number(),
+                'city' => $this->address()->city(),
+                'state' => $this->address()->state(),
+                'zipcode' => $this->address()->zipcode(),
+                'customer_id' => $this->address()->customerId(),
             ],
         ];
     }

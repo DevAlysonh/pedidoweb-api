@@ -3,19 +3,22 @@
 namespace App\Domain\Customer\Entities;
 
 use App\Domain\Customer\VO\Address;
+use App\Domain\Customer\VO\CustomerId;
+use App\Domain\User\VO\UserId;
 
 final class Customer
 {
     public const PREFIX = 'cus_';
 
     public function __construct(
-        private string $id,
+        private CustomerId $id,
         private string $name,
         private string $email,
-        private Address $address
+        private Address $address,
+        private UserId $userId
     ) { }
 
-    public function id(): string
+    public function id(): CustomerId
     {
         return $this->id;
     }
@@ -33,5 +36,10 @@ final class Customer
     public function address(): Address
     {
         return $this->address;
+    }
+
+    public function userId(): UserId
+    {
+        return $this->userId;
     }
 }

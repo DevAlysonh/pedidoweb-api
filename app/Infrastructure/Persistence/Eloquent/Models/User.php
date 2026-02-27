@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Models;
+namespace App\Infrastructure\Persistence\Eloquent\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use App\Infrastructure\Persistence\Eloquent\Models\Customer;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -15,6 +16,7 @@ class User extends Authenticatable implements JWTSubject
 
     public $incrementing = false;
     protected $keyType = 'string';
+    protected $table = 'users';
 
     protected $fillable = [
         'name',
@@ -50,5 +52,10 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims(): array
     {
         return [];
+    }
+
+    public function customers(): HasMany
+    {
+        return $this->hasMany(Customer::class, 'user_id', 'id');
     }
 }

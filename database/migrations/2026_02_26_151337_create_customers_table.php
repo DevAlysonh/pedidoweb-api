@@ -12,6 +12,10 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('name', 100)->nullable(false);
             $table->string('email')->unique()->nullable(false);
+            $table->foreignUuid('user_id')
+                ->references('id')
+                ->on('users')
+                ->cascadeOnDelete();
             $table->timestamps();
         });
     }

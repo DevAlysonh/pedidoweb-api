@@ -3,8 +3,9 @@
 namespace Tests\Feature\Customer;
 
 use App\Application\Dto\CepData;
-use App\Domain\Customer\Exceptions\InvalidZipcodeException;
-use App\Models\User;
+use App\Infrastructure\Persistence\Eloquent\Models\Address;
+use App\Infrastructure\Persistence\Eloquent\Models\Customer;
+use App\Infrastructure\Persistence\Eloquent\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Response;
 use Tests\TestCase;
@@ -94,6 +95,38 @@ class CustomerTest extends TestCase
             ->assertJsonFragment([
                 'message' => 'CEP inválido ou incorreto para este endereço: 58052197'
             ]);
+    }
+    public function test_authenticated_user_can_list_customers(): void
+    {
+        $user = $this->createAuthenticatedUser();
+        $this->actingAs($user, 'api');
+
+        Customer::factory()
+            ->for($user)
+            ->has(Address::factory()->count(1))
+            ->count(3)
+            ->create();
+
+        $response = $this->getJson(route('customer.index'));
+        $response->assertStatus(Response::HTTP_OK);
+        $this->assertCount(3, $response->json('data'));
+    }
+
+    public function test_authenticated_user_can_show_customer(): void
+    {
+        $user = $this->createAuthenticatedUser();
+        $this->actingAs($user, 'api');
+
+        $customer = Customer::factory()
+            ->for($user)
+            ->has(Address::factory()->count(1))
+            ->createOne();
+
+        $response = $this->get(route('customer.show', $customer->id));
+
+        $response->assertStatus(Response::HTTP_OK);
+
+        $this->assertEquals($customer->id, $response->json('data.id'));
     }
 
     private function createAuthenticatedUser()

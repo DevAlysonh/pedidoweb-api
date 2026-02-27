@@ -7,8 +7,11 @@ use App\Domain\Customer\Entities\Customer;
 use App\Domain\Customer\Exceptions\InvalidZipcodeException;
 use App\Domain\Customer\Repositories\CustomerRepositoryInterface;
 use App\Domain\Customer\VO\Address;
+use App\Domain\Customer\VO\CustomerId;
 use App\Domain\Shared\Interfaces\IdGeneratorInterface;
 use App\Domain\Shared\Interfaces\LoggerInterface;
+use App\Domain\User\Entities\User;
+use App\Domain\User\VO\UserId;
 use App\Infrastructure\Services\CepService;
 
 class CreateCustomerUseCase
@@ -20,7 +23,7 @@ class CreateCustomerUseCase
         private LoggerInterface $logger
     ) {}
 
-    public function execute(CreateCustomerDTO $dto): Customer
+    public function execute(UserId $userId, CreateCustomerDTO $dto): Customer
     {
         $this->validateAddress($dto);
 
@@ -34,13 +37,15 @@ class CreateCustomerUseCase
             city: $dto->city,
             state: $dto->state,
             zipcode: $dto->zipcode,
+            customerId: $customerId
         );
 
         $customer = new Customer(
-            id: $customerId,
+            id: CustomerId::fromString($customerId),
             name: $dto->name,
             email: $dto->email,
-            address: $address
+            address: $address,
+            userId: $userId
         );
 
         $this->repository->save($customer);

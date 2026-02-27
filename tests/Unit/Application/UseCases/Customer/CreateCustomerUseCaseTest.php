@@ -6,6 +6,7 @@ use App\Application\Dto\Customer\CreateCustomerDTO;
 use App\Domain\Customer\Repositories\CustomerRepositoryInterface;
 use App\Domain\Shared\Interfaces\IdGeneratorInterface;
 use App\Domain\Shared\Interfaces\LoggerInterface;
+use App\Domain\User\VO\UserId;
 use App\Infrastructure\Services\CepService;
 use PHPUnit\Framework\TestCase;
 
@@ -34,7 +35,9 @@ class CreateCustomerUseCaseTest extends TestCase
         $logger->expects($this->once())->method('info');
 
         $useCase = new CreateCustomerUseCase($repository, $idGenerator, $cepService, $logger);
-        $customer = $useCase->execute($dto);
+
+        $userId = UserId::fromString('user_1');
+        $customer = $useCase->execute($userId,$dto);
 
         $this->assertEquals('cus_1', $customer->id());
         $this->assertEquals('João', $customer->name());
@@ -53,6 +56,7 @@ class CreateCustomerUseCaseTest extends TestCase
         $useCase = new CreateCustomerUseCase($repository, $idGenerator, $cepService, $logger);
 
         $this->expectException(\App\Domain\Customer\Exceptions\InvalidZipcodeException::class);
-        $useCase->execute($dto);
+        $userId = UserId::fromString('user_1');
+        $useCase->execute($userId,$dto);
     }
 }
