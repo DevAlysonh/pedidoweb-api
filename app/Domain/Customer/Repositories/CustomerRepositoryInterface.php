@@ -10,6 +10,5 @@ interface CustomerRepositoryInterface
     public function save(Customer $customer): void;
     public function findAllByUser(string $userId): array;
     public function findById(CustomerId $customerId): ?Customer;
-    public function update(Customer $customer): void;
-    public function delete(string $customerId): void;
+    public function delete(Customer $customer): void;
 }

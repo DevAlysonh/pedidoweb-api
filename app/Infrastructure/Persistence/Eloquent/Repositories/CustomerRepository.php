@@ -10,6 +10,7 @@ use App\Domain\Shared\Interfaces\LoggerInterface;
 use App\Domain\User\VO\UserId;
 use App\Infrastructure\Persistence\Eloquent\Models\Address as AddressModel;
 use App\Infrastructure\Persistence\Eloquent\Models\Customer as CustomerModel;
+use DateTimeImmutable;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -73,38 +74,15 @@ class CustomerRepository implements CustomerRepositoryInterface
         return $Customer ? $this->toDomain($Customer) : null;
     }
 
-    public function update(Customer $customer): void
+    public function delete(Customer $customer): void
     {
-        try {
-            CustomerModel::where('id', $customer->id()->value())->update([
-                'name' => $customer->name(),
-                'email' => $customer->email(),
-            ]);
-        } catch (Throwable $e) {
-            $this->logger->error('Erro ao atualizar cliente', [
-                'customer_id' => $customer->id()->value(),
-                'error' => $e->getMessage(),
-                'exception' => get_class($e),
-            ]);
+        CustomerModel::destroy($customer->id()->value());
 
-            throw $e;
-        }
-    }
-
-    public function delete(string $customerId): void
-    {
-        try {
-            $customer = CustomerModel::find($customerId);
-            if (!$customer) {
-            }
-            $customer->delete();
-        } catch (Throwable $e) {
-            $this->logger->error('Erro ao deletar cliente', [
-                'customer_id' => $customerId,
-                'error' => $e->getMessage(),
-                'exception' => get_class($e),
-            ]);
-        }
+        $this->logger->info('Cliente excluído', [
+            'customer_id' => $customer->id(),
+            'user_id' => $customer->userId(),
+            'date' => new DateTimeImmutable(),
+        ]);
     }
 
     private function toDomain(CustomerModel $model): Customer

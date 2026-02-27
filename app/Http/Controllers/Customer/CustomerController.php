@@ -7,7 +7,7 @@ use App\Application\Dto\Customer\CreateCustomerDTO;
 use App\Application\UseCases\Customer\CreateCustomerUseCase;
 use App\Application\UseCases\Customer\ListCustomersUseCase;
 use App\Application\UseCases\Customer\ShowCustomerUseCase;
-use App\Application\UseCases\DeleteCustomerUseCase;
+use App\Application\UseCases\Customer\DeleteCustomerUseCase;
 use App\Application\UseCases\Customer\UpdateCustomerUseCase;
 use App\Domain\Customer\VO\CustomerId;
 use App\Domain\User\VO\UserId;
@@ -78,17 +78,14 @@ class CustomerController extends Controller
             ->setStatusCode(Response::HTTP_OK);
     }
 
-    // public function destroy(
-    //     string $customerId,
-    //     DeleteCustomerUseCase $deleteCustomerUseCase
-    // ): JsonResponse {
-    //     $dto = new \App\Application\Dto\DeleteCustomerDto($customerId);
-    //     $success = $deleteCustomerUseCase->execute($dto);
-    //     if ($success) {
-    //         return response()->json(['message' => 'Cliente removido com sucesso'], Response::HTTP_OK);
-    //     }
-    //     return response()->json(['message' => 'Cliente não encontrado'], Response::HTTP_NOT_FOUND);
-    // }
+    public function destroy(
+        string $customerId,
+        DeleteCustomerUseCase $deleteCustomerUseCase
+    ): JsonResponse {
+        $deleteCustomerUseCase->execute(CustomerId::fromString($customerId), $this->authUserId());
+
+        return response()->json([], Response::HTTP_NO_CONTENT);
+    }
 
     private function authUserId(): UserId
     {
