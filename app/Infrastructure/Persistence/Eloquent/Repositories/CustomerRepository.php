@@ -24,15 +24,15 @@ class CustomerRepository implements CustomerRepositoryInterface
         try {
             DB::transaction(function () use ($customer) {
                 CustomerModel::create([
-                    'id' => $customer->id(),
+                    'id' => $customer->id()->value(),
                     'name' => $customer->name(),
                     'email' => $customer->email(),
-                    'user_id' => $customer->userId(),
+                    'user_id' => $customer->userId()->value(),
                 ]);
 
                 AddressModel::create([
                     'id' => $customer->address()->id(),
-                    'customer_id' => $customer->id(),
+                    'customer_id' => $customer->id()->value(),
                     'street' => $customer->address()->street(),
                     'number' => $customer->address()->number(),
                     'city' => $customer->address()->city(),

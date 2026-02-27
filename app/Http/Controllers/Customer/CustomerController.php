@@ -7,6 +7,7 @@ use App\Application\UseCases\Customer\CreateCustomerUseCase;
 use App\Application\UseCases\Customer\ListCustomersUseCase;
 use App\Application\UseCases\Customer\ShowCustomerUseCase;
 use App\Domain\Customer\VO\CustomerId;
+use App\Domain\User\Entities\User;
 use App\Domain\User\VO\UserId;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Customer\CreateCustomerRequest;
@@ -41,7 +42,7 @@ class CustomerController extends Controller
         $createCustomerDto = CreateCustomerDTO::fromRequest($request->validated());
 
         $createdCustomer = $createCustomerUseCase->execute(
-            $this->authUserId,
+            UserId::fromString($this->authUserId),
             $createCustomerDto
         );
 
