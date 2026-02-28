@@ -40,7 +40,7 @@
         ],
         "test:coverage": [
             "@php artisan config:clear --ansi",
-            "@php artisan test --coverage-clover coverage.xml"
+            "@php artisan test --coverage"
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",

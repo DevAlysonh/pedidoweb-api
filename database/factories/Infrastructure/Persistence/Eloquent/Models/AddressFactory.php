@@ -20,7 +20,7 @@ class AddressFactory extends Factory
             'number' => fake()->randomNumber(3),
             'city' => fake()->city(),
             'state' => fake()->stateAbbr(),
-            'zipcode' => fake()->postcode()
+            'zipcode' => fake()->numerify('########')
         ];
     }
 }
