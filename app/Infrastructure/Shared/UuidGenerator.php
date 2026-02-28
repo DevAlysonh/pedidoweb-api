@@ -7,8 +7,8 @@ use Illuminate\Support\Str;
 
 class UuidGenerator implements IdGeneratorInterface
 {
-    public function generate(string $prefix = ''): string
+    public function generate(): string
     {
-        return $prefix . Str::uuid()->toString();
+        return Str::uuid()->toString();
     }
 }

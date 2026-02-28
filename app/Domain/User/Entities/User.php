@@ -6,8 +6,6 @@ use App\Domain\User\VO\UserId;
 
 final class User
 {
-    public const PREFIX = 'usr_';
-
     public function __construct(
         private UserId $id,
         private string $name,

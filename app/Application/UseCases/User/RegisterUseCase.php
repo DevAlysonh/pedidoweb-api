@@ -27,7 +27,7 @@ class RegisterUseCase
             throw new UserAlreadyExistsException();
         }
 
-        $userId = $this->idGenerator->generate(User::PREFIX);
+        $userId = $this->idGenerator->generate();
         $hashedPassword = $this->passwordHasher->hash($dto->password);
 
         $user = new User(

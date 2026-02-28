@@ -4,5 +4,5 @@ namespace App\Domain\Shared\Interfaces;
 
 interface IdGeneratorInterface
 {
-    public function generate(string $prefix): string;
+    public function generate(): string;
 }

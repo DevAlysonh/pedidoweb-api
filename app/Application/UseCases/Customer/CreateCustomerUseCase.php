@@ -27,8 +27,8 @@ class CreateCustomerUseCase
     {
         $this->validateAddress($dto);
 
-        $customerId = $this->idGenerator->generate(Customer::PREFIX);
-        $addressId  = $this->idGenerator->generate(Address::PREFIX);
+        $customerId = $this->idGenerator->generate();
+        $addressId  = $this->idGenerator->generate();
 
         $address = new Address(
             id: $addressId,

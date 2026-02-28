@@ -4,8 +4,6 @@ namespace App\Domain\Customer\VO;
 
 final class Address
 {
-    public const PREFIX = 'addr_';
-
     public function __construct(
         private string $id,
         private string $street,
