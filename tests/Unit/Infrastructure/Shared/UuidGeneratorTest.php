@@ -3,7 +3,6 @@
 namespace Tests\Unit\Infrastructure\Shared;
 
 use App\Infrastructure\Shared\UuidGenerator;
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class UuidGeneratorTest extends TestCase
