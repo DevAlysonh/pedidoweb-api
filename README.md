@@ -23,7 +23,7 @@ cp .env.example .env
 #### 2️⃣ Iniciar containers
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 Aguarde os containers ficarem prontos (cerca de 10 segundos).
@@ -258,7 +258,7 @@ docker-compose exec app composer test:coverage
 A documentação completa está em `docs/openapi.yaml` (OpenAPI 3.0).
 
 Para executar a documentação interativa execute:
-```
+```bash
 npx swagger-ui-watcher docs/openapi.yaml --port=8001
 ```
 
