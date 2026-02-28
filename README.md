@@ -245,10 +245,10 @@ Resposta 403 ao cliente
 
 ```bash
 # Rodar testes
-docker-compose exec app composer test
+docker compose exec app composer test
 
 # Testes com cobertura de código
-docker-compose exec app composer test:coverage
+docker compose exec app composer test:coverage
 ```
 
 ---
@@ -283,19 +283,19 @@ Baixe a coleção de endpoints do postman para testar: [CustomerManager-Collecti
 
 ```bash
 # Ver status dos containers
-docker-compose ps
+docker compose ps
 
 # Ver logs
-docker-compose logs -f app
+docker compose logs -f app
 
 # Acessar bash do container
-docker-compose exec app bash
+docker compose exec app bash
 
 # Executar artisan commands
-docker-compose exec app php artisan migrate:fresh
+docker compose exec app php artisan migrate:fresh
 
 # Parar containers
-docker-compose down
+docker compose down
 ```
 
 ---
