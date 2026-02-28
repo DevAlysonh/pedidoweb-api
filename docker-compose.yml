@@ -6,8 +6,6 @@ services:
     container_name: customermanager-app
     restart: unless-stopped
     working_dir: /var/www/html
-    env_file:
-      - .env
     volumes:
       - ./:/var/www/html
       - ./docker/php.ini:/usr/local/etc/php/php.ini
