@@ -13,7 +13,7 @@ class MeUseCaseTest extends TestCase
 {
     public function testExecuteSuccess(): void
     {
-        $userId = UserId::fromString('usr_1');
+        $userId = UserId::fromString('xpto1');
         $user = new User(
             $userId,
             'João Silva',
@@ -30,14 +30,14 @@ class MeUseCaseTest extends TestCase
         $useCase = new MeUseCase($repository);
         $result = $useCase->execute($userId);
 
-        $this->assertEquals('usr_1', $result->id()->value());
+        $this->assertEquals('xpto1', $result->id()->value());
         $this->assertEquals('João Silva', $result->name());
         $this->assertEquals('joao@email.com', $result->email());
     }
 
     public function testExecuteWithNonExistentUser(): void
     {
-        $userId = UserId::fromString('usr_1');
+        $userId = UserId::fromString('xpto1');
         $repository = $this->getMockBuilder(UserRepositoryInterface::class)
             ->onlyMethods(['findByEmail', 'findById', 'save'])
             ->getMock();

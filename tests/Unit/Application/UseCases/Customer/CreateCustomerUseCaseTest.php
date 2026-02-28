@@ -32,7 +32,7 @@ class CreateCustomerUseCaseTest extends TestCase
             state: 'SP',
         );
 
-        $idGenerator->method('generate')->willReturn('cus_1');
+        $idGenerator->method('generate')->willReturn('xpto1');
         $cepService->method('lookup')->willReturn($cepData);
 
         $repository->expects($this->once())->method('save');
@@ -43,7 +43,7 @@ class CreateCustomerUseCaseTest extends TestCase
         $userId = UserId::fromString('user_1');
         $customer = $useCase->execute($userId, $dto);
 
-        $this->assertEquals('cus_1', $customer->id());
+        $this->assertEquals('xpto1', $customer->id());
         $this->assertEquals('João', $customer->name());
     }
 

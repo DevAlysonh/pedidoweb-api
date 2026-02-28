@@ -20,7 +20,7 @@ class LoginUseCaseTest extends TestCase
         $password = 'password123';
         $hashedPassword = Hash::make($password);
 
-        $userId = UserId::fromString('usr_123');
+        $userId = UserId::fromString('xpto123');
         $user = new User(
             id: $userId,
             name: 'João Silva',

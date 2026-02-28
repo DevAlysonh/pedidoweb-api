@@ -41,7 +41,7 @@ class UpdateCustomerAddressUseCaseTest extends TestCase
 
     public function test_execute_updates_customer_address_successfully()
     {
-        $customerId = CustomerId::fromString('cus_1');
+        $customerId = CustomerId::fromString('xpto1');
         $userId = UserId::fromString('user_1');
 
         $customer = new Customer(
@@ -50,7 +50,7 @@ class UpdateCustomerAddressUseCaseTest extends TestCase
             email: 'joao@email.com',
             userId: $userId,
             address: new Address(
-                id: 'addr_1',
+                id: 'xpto1',
                 street: 'Rua A',
                 number: '123',
                 city: 'São Paulo',
@@ -91,7 +91,7 @@ class UpdateCustomerAddressUseCaseTest extends TestCase
 
     public function test_execute_updates_only_street_when_other_fields_are_null()
     {
-        $customerId = CustomerId::fromString('cus_1');
+        $customerId = CustomerId::fromString('xpto1');
         $userId = UserId::fromString('user_1');
 
         $customer = new Customer(
@@ -100,7 +100,7 @@ class UpdateCustomerAddressUseCaseTest extends TestCase
             email: 'joao@email.com',
             userId: $userId,
             address: new Address(
-                id: 'addr_1',
+                id: 'xpto1',
                 street: 'Rua A',
                 number: '123',
                 city: 'São Paulo',
@@ -141,7 +141,7 @@ class UpdateCustomerAddressUseCaseTest extends TestCase
 
     public function test_execute_throws_exception_when_customer_not_found()
     {
-        $customerId = CustomerId::fromString('cus_1');
+        $customerId = CustomerId::fromString('xpto1');
         $userId = UserId::fromString('user_1');
 
         $this->repository->method('findById')->willReturn(null);
@@ -160,7 +160,7 @@ class UpdateCustomerAddressUseCaseTest extends TestCase
 
     public function test_execute_throws_exception_when_user_not_authorized()
     {
-        $customerId = CustomerId::fromString('cus_1');
+        $customerId = CustomerId::fromString('xpto1');
         $ownerUserId = UserId::fromString('user_1');
         $differentUserId = UserId::fromString('user_2');
 
@@ -170,7 +170,7 @@ class UpdateCustomerAddressUseCaseTest extends TestCase
             email: 'joao@email.com',
             userId: $ownerUserId,
             address: new Address(
-                id: 'addr_1',
+                id: 'xpto1',
                 street: 'Rua A',
                 number: '123',
                 city: 'São Paulo',
@@ -197,7 +197,7 @@ class UpdateCustomerAddressUseCaseTest extends TestCase
 
     public function test_execute_throws_exception_when_zipcode_not_found()
     {
-        $customerId = CustomerId::fromString('cus_1');
+        $customerId = CustomerId::fromString('xpto1');
         $userId = UserId::fromString('user_1');
 
         $customer = new Customer(
@@ -206,7 +206,7 @@ class UpdateCustomerAddressUseCaseTest extends TestCase
             email: 'joao@email.com',
             userId: $userId,
             address: new Address(
-                id: 'addr_1',
+                id: 'xpto1',
                 street: 'Rua A',
                 number: '123',
                 city: 'São Paulo',
@@ -233,7 +233,7 @@ class UpdateCustomerAddressUseCaseTest extends TestCase
 
     public function test_execute_throws_exception_when_city_does_not_match_zipcode()
     {
-        $customerId = CustomerId::fromString('cus_1');
+        $customerId = CustomerId::fromString('xpto1');
         $userId = UserId::fromString('user_1');
 
         $customer = new Customer(
@@ -242,7 +242,7 @@ class UpdateCustomerAddressUseCaseTest extends TestCase
             email: 'joao@email.com',
             userId: $userId,
             address: new Address(
-                id: 'addr_1',
+                id: 'xpto1',
                 street: 'Rua A',
                 number: '123',
                 city: 'São Paulo',
@@ -278,7 +278,7 @@ class UpdateCustomerAddressUseCaseTest extends TestCase
 
     public function test_execute_throws_exception_when_state_does_not_match_zipcode()
     {
-        $customerId = CustomerId::fromString('cus_1');
+        $customerId = CustomerId::fromString('xpto1');
         $userId = UserId::fromString('user_1');
 
         $customer = new Customer(
@@ -287,7 +287,7 @@ class UpdateCustomerAddressUseCaseTest extends TestCase
             email: 'joao@email.com',
             userId: $userId,
             address: new Address(
-                id: 'addr_1',
+                id: 'xpto1',
                 street: 'Rua A',
                 number: '123',
                 city: 'São Paulo',
@@ -323,7 +323,7 @@ class UpdateCustomerAddressUseCaseTest extends TestCase
 
     public function test_execute_city_and_state_validation_is_case_insensitive()
     {
-        $customerId = CustomerId::fromString('cus_1');
+        $customerId = CustomerId::fromString('xpto1');
         $userId = UserId::fromString('user_1');
 
         $customer = new Customer(
@@ -332,7 +332,7 @@ class UpdateCustomerAddressUseCaseTest extends TestCase
             email: 'joao@email.com',
             userId: $userId,
             address: new Address(
-                id: 'addr_1',
+                id: 'xpto1',
                 street: 'Rua A',
                 number: '123',
                 city: 'São Paulo',
@@ -371,7 +371,7 @@ class UpdateCustomerAddressUseCaseTest extends TestCase
 
     public function test_execute_logs_information_with_diff_when_address_updated()
     {
-        $customerId = CustomerId::fromString('cus_1');
+        $customerId = CustomerId::fromString('xpto1');
         $userId = UserId::fromString('user_1');
 
         $customer = new Customer(
@@ -380,7 +380,7 @@ class UpdateCustomerAddressUseCaseTest extends TestCase
             email: 'joao@email.com',
             userId: $userId,
             address: new Address(
-                id: 'addr_1',
+                id: 'xpto1',
                 street: 'Rua A',
                 number: '123',
                 city: 'São Paulo',
@@ -425,7 +425,7 @@ class UpdateCustomerAddressUseCaseTest extends TestCase
 
     public function test_execute_returns_customer_with_updated_zipcode()
     {
-        $customerId = CustomerId::fromString('cus_1');
+        $customerId = CustomerId::fromString('xpto1');
         $userId = UserId::fromString('user_1');
 
         $customer = new Customer(
@@ -434,7 +434,7 @@ class UpdateCustomerAddressUseCaseTest extends TestCase
             email: 'joao@email.com',
             userId: $userId,
             address: new Address(
-                id: 'addr_1',
+                id: 'xpto1',
                 street: 'Rua A',
                 number: '123',
                 city: 'São Paulo',
@@ -476,9 +476,9 @@ class UpdateCustomerAddressUseCaseTest extends TestCase
 
     public function test_execute_preserves_address_id_when_updating()
     {
-        $customerId = CustomerId::fromString('cus_1');
+        $customerId = CustomerId::fromString('xpto1');
         $userId = UserId::fromString('user_1');
-        $originalAddressId = 'addr_1';
+        $originalAddressId = 'xpto1';
 
         $customer = new Customer(
             id: $customerId,

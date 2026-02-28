@@ -18,7 +18,7 @@ class UpdateCustomerUseCaseTest extends TestCase
 {
     public function test_execute_updates_customer_when_authorized()
     {
-        $customerId = CustomerId::fromString('cus_1');
+        $customerId = CustomerId::fromString('xpto1');
         $userId = UserId::fromString('user_1');
 
         $customer = new Customer(
@@ -27,7 +27,7 @@ class UpdateCustomerUseCaseTest extends TestCase
             email: 'joao@email.com',
             userId: $userId,
             address: new Address(
-                id: 'addr_1',
+                id: 'xpto1',
                 street: 'Rua A',
                 number: '123',
                 city: 'Cidade',
@@ -56,7 +56,7 @@ class UpdateCustomerUseCaseTest extends TestCase
 
     public function test_updateCustomerUseCase_should_throw_an_exception_when_customer_not_found()
     {
-        $customerId = CustomerId::fromString('cus_1');
+        $customerId = CustomerId::fromString('xpto1');
         $userId = UserId::fromString('user_1');
 
         $repo = $this->getMockBuilder(CustomerRepositoryInterface::class)
@@ -76,7 +76,7 @@ class UpdateCustomerUseCaseTest extends TestCase
 
     public function test_updateCustomerUseCase_should_throw_an_exception_when_user_is_not_owner()
     {
-        $customerId = CustomerId::fromString('cus_1');
+        $customerId = CustomerId::fromString('xpto1');
         $userId = UserId::fromString('user_1');
 
         $customer = new Customer(
@@ -85,7 +85,7 @@ class UpdateCustomerUseCaseTest extends TestCase
             email: 'joao@email.com',
             userId: $userId,
             address: new Address(
-                id: 'addr_1',
+                id: 'xpto1',
                 street: 'Rua A',
                 number: '123',
                 city: 'Cidade',
@@ -107,6 +107,6 @@ class UpdateCustomerUseCaseTest extends TestCase
         $dto = new UpdateCustomerDto($customer->name(), $customer->email());
         $useCase = new UpdateCustomerUseCase($repo, $logger);
         $this->expectException(UnauthorizedException::class);
-        $useCase->execute($customerId, UserId::fromString('cus_2'), $dto);
+        $useCase->execute($customerId, UserId::fromString('xpto2'), $dto);
     }
 }

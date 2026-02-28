@@ -13,9 +13,9 @@ class CustomerIdTest extends TestCase
 
     public function testFromStringCreatesInstance()
     {
-        $customerId = CustomerId::fromString('cus_123');
+        $customerId = CustomerId::fromString('xpto123');
         $this->assertInstanceOf(CustomerId::class, $customerId);
-        $this->assertEquals('cus_123', $customerId->value());
+        $this->assertEquals('xpto123', $customerId->value());
     }
 
     public function testEquals()
