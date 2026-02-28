@@ -254,6 +254,11 @@ docker-compose exec app composer test:coverage
 
 A documentação completa está em `docs/openapi.yaml` (OpenAPI 3.0).
 
+Para executar a documentação interativa execute:
+```
+npx swagger-ui-watcher docs/openapi.yaml --port=8001
+```
+
 **Endpoints principais:**
 
 - `POST /api/v1/auth/register` - Registrar novo usuário
