@@ -8,8 +8,6 @@ use App\Domain\User\VO\UserId;
 
 final class Customer
 {
-    public const PREFIX = 'cus_';
-
     public function __construct(
         private CustomerId $id,
         private string $name,

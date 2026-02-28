@@ -13,18 +13,18 @@ class CustomerRepositoryInterfaceTest extends TestCase
     {
         $repository = $this->createMock(CustomerRepositoryInterface::class);
         $customer = new Customer(
-            id: CustomerId::fromString('cus_1'),
+            id: CustomerId::fromString('xpto1'),
             name: 'João',
             email:'joao@email.com',
             userId: UserId::fromString('user_1'),
             address: new Address(
-                id: 'addr_1',
+                id: 'xpto1',
                 street: 'Rua A',
                 number: '123',
                 city: 'Cidade',
                 state: 'SP',
                 zipcode: '12345678',
-                customerId: 'cus_1'
+                customerId: 'xpto1'
             )
         );
 

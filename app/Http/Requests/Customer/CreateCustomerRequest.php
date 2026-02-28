@@ -23,4 +23,13 @@ class CreateCustomerRequest extends FormRequest
             'zipcode' => 'required|string|regex:/^\d{5}-?\d{3}$/|max:9'
         ];
     }
+
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('zipcode')) {
+            $this->merge([
+                'zipcode' => str_replace('-', '', $this->zipcode),
+            ]);
+        }
+    }
 }

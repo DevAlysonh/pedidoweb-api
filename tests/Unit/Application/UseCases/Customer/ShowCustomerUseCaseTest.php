@@ -14,10 +14,10 @@ class ShowCustomerUseCaseTest extends TestCase
 {
     public function testExecuteReturnsCustomer()
     {
-        $customerId = new CustomerId('cus_1');
+        $customerId = new CustomerId('xpto1');
         $userId = new UserId('user_1');
         $address = new Address(
-            id: 'addr_1',
+            id: 'xpto1',
             street: 'Rua A',
             number: '123',
             city: 'Cidade',
@@ -50,7 +50,7 @@ class ShowCustomerUseCaseTest extends TestCase
 
     public function testExecuteThrowsCustomerNotFoundException()
     {
-        $customerId = new CustomerId('cus_1');
+        $customerId = new CustomerId('xpto1');
         $userId = new UserId('user_1');
         $repository = $this->createMock(CustomerRepositoryInterface::class);
         $repository->expects($this->once())
@@ -66,11 +66,11 @@ class ShowCustomerUseCaseTest extends TestCase
 
     public function testExecuteThrowsUnauthorizedException()
     {
-        $customerId = new CustomerId('cus_1');
+        $customerId = new CustomerId('xpto1');
         $userId = new UserId('user_1');
         $otherUserId = new UserId('user_2');
         $address = new Address(
-            id: 'addr_1',
+            id: 'xpto1',
             street: 'Rua A',
             number: '123',
             city: 'Cidade',

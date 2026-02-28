@@ -28,14 +28,14 @@ class RegisterUseCaseTest extends TestCase
         $hasher->method('hash')->willReturn('hashed_password');
 
         $repository->method('findByEmail')->willReturn(null);
-        $idGenerator->method('generate')->willReturn('usr_1');
+        $idGenerator->method('generate')->willReturn('xpto1');
 
         $repository->expects($this->once())->method('save');
 
         $useCase = new RegisterUseCase($repository, $idGenerator, $hasher);
         $user = $useCase->execute($dto);
 
-        $this->assertEquals('usr_1', $user->id()->value());
+        $this->assertEquals('xpto1', $user->id()->value());
         $this->assertEquals('João Silva', $user->name());
         $this->assertEquals('joao@email.com', $user->email());
     }
@@ -54,7 +54,7 @@ class RegisterUseCaseTest extends TestCase
         $hasher->method('hash')->willReturn('hashed_password');
 
         $existingUser = new User(
-            id: UserId::fromString('usr_existing'),
+            id: UserId::fromString('xptoexisting'),
             name: 'Existing User',
             email: 'joao@email.com',
             password: 'hashed_password'
