@@ -42,6 +42,9 @@ docker compose exec app php artisan jwt:secret
 
 # Executar migrações do banco de dados
 docker compose exec app php artisan migrate
+
+# Ajuste as permissões em storage/
+sudo chmod -R a+w storage/
 ```
 
 **Pronto!** Acesse: **http://localhost**
