@@ -12,7 +12,7 @@ services:
       - ./:/var/www/html
       - ./docker/php.ini:/usr/local/etc/php/php.ini
     networks:
-      - pedidoweb
+      - customermanager
     depends_on:
       - db
       - redis
@@ -29,7 +29,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - pedidoweb
+      - customermanager
     ports:
       - "5432:5432"
     healthcheck:
@@ -46,7 +46,7 @@ services:
     volumes:
       - redis_data:/data
     networks:
-      - pedidoweb
+      - customermanager
     ports:
       - "6379:6379"
     healthcheck:
@@ -67,7 +67,7 @@ services:
       - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf
       - nginx_logs:/var/log/nginx
     networks:
-      - pedidoweb
+      - customermanager
     depends_on:
       - app
 
@@ -77,5 +77,5 @@ volumes:
   nginx_logs:
 
 networks:
-  pedidoweb:
+  customermanager:
     driver: bridge
