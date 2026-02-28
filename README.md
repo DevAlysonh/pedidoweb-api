@@ -272,6 +272,10 @@ npx swagger-ui-watcher docs/openapi.yaml --port=8001
 
 ---
 
+**Postman collection**
+
+Baixe a coleção de endpoints do postman para testar: [CustomerManager-Collection](https://drive.google.com/file/d/12Fy6cmDqkAsXy6v6kwGME89KTHIkhIPa/view?usp=drive_link)
+
 ## 🎮 Comandos Úteis
 
 ```bash
