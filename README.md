@@ -1,12 +1,72 @@
-# Customer Manager API
+# 🚀 Customer Manager API
 
 API para gerenciamento de cadastro de clientes com autenticação JWT, construída com **Domain-Driven Design (DDD)** e **Clean Architecture**.
 
+---
+
+## ⚡ Quick Start (Docker)
+
+### Pré-requisitos
+- Docker e Docker Compose instalados
+- Git
+
+### 3 Passos para Começar
+
+#### 1️⃣ Clonar e configurar
+
+```bash
+git clone git@github.com:DevAlysonh/customer-manager-api.git
+cd customer-manager-api
+cp .env.example .env
+```
+
+#### 2️⃣ Iniciar containers
+
+```bash
+docker-compose up -d
+```
+
+Aguarde os containers ficarem prontos (cerca de 10 segundos).
+
+#### 3️⃣ Configurar a aplicação
+
+```bash
+# Instalar dependências
+docker compose exec app composer install
+
+# Gerar chave da aplicação
+docker compose exec app php artisan key:generate
+
+# Gerar chave JWT (IMPORTANTE para autenticação)
+docker compose exec app php artisan jwt:secret
+
+# Executar migrações do banco de dados
+docker compose exec app php artisan migrate
+```
+
+**Pronto!** Acesse: **http://localhost**
+
+---
+
+## 📋 Índice
+
+1. [Sobre o Projeto](#sobre-o-projeto)
+2. [Arquitetura](#arquitetura)
+3. [Domain-Driven Design (DDD)](#domain-driven-design-ddd)
+4. [Clean Architecture](#clean-architecture)
+5. [Testes](#testes)
+6. [Documentação da API](#documentação-da-api)
+7. [Comandos Úteis](#comandos-úteis)
+
+---
+
 ## Sobre o Projeto
 
-A Customer Manage API é uma aplicação que gerencia o cadastro de clientes, permitindo que usuários autenticados criem, leiam, atualizem e deletem seus próprios registros de clientes com endereços associados. O projeto demonstra a aplicação prática de padrões de arquitetura modernos em PHP/Laravel.
+A CustomerManager API é uma aplicação que gerencia o cadastro de clientes, permitindo que usuários autenticados criem, leiam, atualizem e deletem seus próprios registros de clientes com endereços associados.
 
-## Arquitetura
+---
+
+## 📊 Arquitetura
 
 O projeto segue os princípios de **Domain-Driven Design (DDD)** combinados com **Clean Architecture**, garantindo separação de responsabilidades, testabilidade e manutenibilidade.
 
@@ -20,7 +80,9 @@ app/
 └── Infrastructure/          # Camada de Infraestrutura (persistência e serviços)
 ```
 
-## Domain-Driven Design (DDD)
+---
+
+## 🎯 Domain-Driven Design (DDD)
 
 O projeto aplica DDD através da estrutura de domínios específicos e artefatos de domínio:
 
@@ -70,7 +132,9 @@ Contém abstrações e interfaces reutilizáveis:
 - `TokenGeneratorInterface` - Contrato para geração de tokens
 - `LoggerInterface` - Contrato para logging
 
-## Clean Architecture
+---
+
+## 🏗️ Clean Architecture
 
 A aplicação está organizada em camadas conforme princípios de Clean Architecture:
 
@@ -143,7 +207,7 @@ Interface HTTP da aplicação:
 - `UserResource` - Serialização de usuários
 - `AuthTokenResource` - Serialização de tokens
 
-## Fluxo de Autorização
+### Fluxo de Autorização
 
 O projeto implementa segurança através de:
 - **JWT (JSON Web Tokens)** para autenticação
@@ -163,7 +227,7 @@ Se não pertencer, lança UnauthorizedException
 Resposta 403 ao cliente
 ```
 
-## Padrões Utilizados
+### Padrões Utilizados
 
 - **Repository Pattern** - Abstração de persistência via interfaces
 - **Dependency Injection** - Injeção de dependências via Service Providers
@@ -172,72 +236,54 @@ Resposta 403 ao cliente
 - **Use Case Pattern** - Orquestração de lógica de domínio
 - **Exception Handling** - Exceções de domínio para diferentes cenários
 
-## Testes
+---
 
-O projeto inclui testes unitários para:
-- Entidades de domínio
-- Value Objects
-- Use Cases
-- Repositórios
-
-E testes de integração para as features;
-
-Para executar os testes:
-```bash
-php artisan test
-```
-
-## Instalação e Uso
-
-### Pré-requisitos
-- PHP 8.2+
-- Composer
-- SQLite (ou banco de dados configurado)
-
-### Setup
+## 🧪 Testes
 
 ```bash
-# Instalar dependências
-composer install
+# Rodar testes
+docker-compose exec app composer test
 
-# Configurar .env
-cp .env.example .env
-
-# Gerar chave da aplicação
-php artisan key:generate
-
-# Executar migrações
-php artisan migrate
-
-# Iniciar servidor
-php artisan serve
+# Testes com cobertura de código
+docker-compose exec app composer test:coverage
 ```
 
-## Documentação da API
+---
 
-A documentação completa da API está em `docs/openapi.yaml` (OpenAPI 3.0). 
+## 📚 Documentação da API
 
-Para executar o swaggerUI use:
-```
-npx swagger-ui-watcher docs/openapi.yaml --port=8001
-```
+A documentação completa está em `docs/openapi.yaml` (OpenAPI 3.0).
 
 **Endpoints principais:**
 
-### Autenticação
 - `POST /api/v1/auth/register` - Registrar novo usuário
 - `POST /api/v1/auth/login` - Fazer login
-- `GET /api/v1/auth/me` - Obter dados do usuário autenticado
-- `POST /api/v1/auth/logout` - Fazer logout
-
-### Clientes
+- `GET /api/v1/auth/me` - Dados do usuário autenticado
 - `GET /api/v1/customers` - Listar clientes
 - `POST /api/v1/customers` - Criar cliente
 - `GET /api/v1/customers/{id}` - Obter cliente
 - `PATCH /api/v1/customers/{id}` - Atualizar cliente
-- `PATCH /api/v1/customers/{id}/address` - Atualizar endereço
 - `DELETE /api/v1/customers/{id}` - Deletar cliente
 
-### Postman
+---
 
-Você também pode baixar uma coleção do postman para testar a API. Basta clicar neste link: [Customer Manager - PostmanCollection](https://drive.google.com/file/d/12Fy6cmDqkAsXy6v6kwGME89KTHIkhIPa/view?usp=sharing)
+## 🎮 Comandos Úteis
+
+```bash
+# Ver status dos containers
+docker-compose ps
+
+# Ver logs
+docker-compose logs -f app
+
+# Acessar bash do container
+docker-compose exec app bash
+
+# Executar artisan commands
+docker-compose exec app php artisan migrate:fresh
+
+# Parar containers
+docker-compose down
+```
+
+---
