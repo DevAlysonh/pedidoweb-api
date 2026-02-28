@@ -271,6 +271,7 @@ npx swagger-ui-watcher docs/openapi.yaml --port=8001
 - `POST /api/v1/customers` - Criar cliente
 - `GET /api/v1/customers/{id}` - Obter cliente
 - `PATCH /api/v1/customers/{id}` - Atualizar cliente
+- `PATCH /api/v1/customers/{id}/address` - Atualizar endereço do cliente
 - `DELETE /api/v1/customers/{id}` - Deletar cliente
 
 ---
